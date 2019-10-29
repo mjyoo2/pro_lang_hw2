@@ -55,8 +55,6 @@ int var_num = 0;
 %left  OPEN CLOSE
 %left  EQUAL
 
-
-
 %%
 /* Rules */
 goal:	eval goal	{}
