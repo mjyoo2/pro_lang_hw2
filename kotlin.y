@@ -99,7 +99,6 @@ int yyerror(const char *s)
 	return printf("%s\n", s);
 }
 
-
 void Save(char *name, double data, int type, int read_only, int ){
 
 	int data_index = -1;
