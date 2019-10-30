@@ -33,7 +33,7 @@ str_node* get_first_node(str_node *temp){
 
 str_node* get_last_node(str_node *temp){
     str_node *last = temp;
-    while (last->prev != NULL){
+    while (last->next != NULL){
       last = last->next;
     }
     return last;
