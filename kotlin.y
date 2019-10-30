@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "parser_util.h"
 
 extern int yylex(void);
 extern void yyterminate();

@@ -33,7 +33,7 @@ str_node* get_first_node(str_node *temp){
 
 str_node* get_last_node(str_node *temp){
     str_node *last = temp;
-    while (last->prev != NULL){
+    while (last->next != NULL){
       last = last->next;
     }
     return last;
@@ -60,7 +60,8 @@ void print_list(str_node *temp){
 		file_pointer = fopen("output.txt", "w");
     str_node *first_node = get_first_node(temp);
     for (str_node *temp_node = first_node; temp_node != NULL; temp_node = temp_node -> next){
-      fprintf(file_pointer, "%s", temp_node->str);
+      fprintf(file_pointer, "%s ", temp_node->str);
     }
 		fclose(file_pointer);
+		return;
 }
