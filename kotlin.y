@@ -29,9 +29,10 @@ typedef struct typevar{
 	union variable var;
 	int type;
 	int read_only;
+	int nullable;
 }typevar;
 
-void Save(char* name, double data, int type);
+void Save(char* name, double data, int type, int nullable);
 double Load(char *name);
 
 typevar var_save[1000] = { 0 };
@@ -50,47 +51,23 @@ int var_num = 0;
 %token <int_var> EOL
 %token <str_var> ID
 
-%left  PLUS MINUS
-%left  MULT DIV
+%left	 COMMA
+%left  FROMTO
+%left  CURLY_OPEN CURLY_CLOSE
+%left  NULLABLE
+%left  COLON
+%left  PULS MINUS
 %left  OPEN CLOSE
+%left  MULT DIV
 %left  EQUAL
+%left  EOL
 
 %%
 /* Rules */
 goal:	eval goal	{}
     |	eval		{}
 	;
-eval:	expr EOL	{ printf("%lf\n", $1); 
-    	}
-    |   ID EQUAL expr EOL { printf("%lf\n",$3);
-			    Save ($1, $3);
-	}
-	;
-expr:	expr PLUS term	{ $$ = $1 + $3;
-    	}
-    |	expr MINUS term	{ $$ = $1 - $3;
-	} 
-    |	term		{ $$ = $1;
-	} 
-    ;
-term:	term MULT factor { $$ = $1 * $3;
-    	} 
-    |	term DIV factor	{ $$ = $1 / $3;
-	} 
-    |	factor		{ $$ = $1;
-	}
-    ;
-factor: NUMBER	{ $$ = $1;
-        }
-    |   OPEN expr CLOSE	{ $$ = $2;
-	}
-    |	ID	{ $$ = Load($1);
-	}
-    |   MINUS factor { $$ = -$2;
-	}
-    |   PLUS factor { $$ = $2;
-	}
-    ;
+fucntion_def:
 
 %%
 /* User code */
@@ -99,12 +76,12 @@ int yyerror(const char *s)
 	return printf("%s\n", s);
 }
 
-void Save(char *name, double data, int type, int read_only, int ){
+void Save(char *name, double data, int type, int read_only, int nullable){
 
 	int data_index = -1;
 	int new_save = 0;
 	char *temp = (char *)malloc(100);
-	
+
 	//load string to temperal variable
 	for (int i=0; i<100; i++){
 		if (name[i] == ' ' || name[i] == '=' || name[i] == 0){
@@ -128,7 +105,7 @@ void Save(char *name, double data, int type, int read_only, int ){
 		data_index = var_num;
 		var_num++;
 	}
-	
+
 	//if the variable save first, save variable name
 	if (new_save == 1){
 		var_name[data_index] = temp;
@@ -193,5 +170,3 @@ union variable Load(char *name){
 	free(temp);
 	return LoadByType(var_save[data_index]);
 }
-
-
