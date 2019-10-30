@@ -51,23 +51,62 @@ int var_num = 0;
 %token <int_var> EOL
 %token <str_var> ID
 
-%left	 COMMA
-%left  FROMTO
-%left  CURLY_OPEN CURLY_CLOSE
-%left  NULLABLE
-%left  COLON
-%left  PULS MINUS
-%left  OPEN CLOSE
-%left  MULT DIV
-%left  EQUAL
-%left  EOL
+%left FUNCTION
+%left VAR VAL
+%left FOR IN
+%left DOWN STEP
+%left WHEN
+%left LISTOF SETOF
+
+%left UNIT BYTE SHORT INT LONG FLOAT DOUBLE
+
+%left	COMMA
+%left FROMTO
+%left CURLY_OPEN CURLY_CLOSE
+%left NULLABLE
+%left COLON
+%left PULS MINUS
+%left OPEN CLOSE
+%left MULT DIV
+%left EQUAL
+%left EOL
 
 %%
 /* Rules */
 goal:	eval goal	{}
     |	eval		{}
 	;
-fucntion_def:
+
+
+state: VAR COLON
+
+expr:	expr PLUS term	{ $$ = $1 + $3;
+    	}
+    |	expr MINUS term	{ $$ = $1 - $3;
+			}
+    |	term		{ $$ = $1;
+			}
+    ;
+
+term:		term MULT factor { $$ = $1 * $3;
+    		}
+    |		term DIV factor	{ $$ = $1 / $3;
+				}
+    |		factor		{ $$ = $1;
+				}
+    ;
+
+factor: NUMBER	{ $$ = $1;
+        }
+    |   OPEN expr CLOSE	{ $$ = $2;
+				}
+    |		ID	{ $$ = Load($1);
+				}
+    |   MINUS factor { $$ = -$2;
+				}
+    |   PLUS factor { $$ = $2;
+				}
+    ;
 
 %%
 /* User code */
