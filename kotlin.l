@@ -24,6 +24,8 @@ SPACE [ \t\r\n]+
 "when" { return WHEN; }
 "listOf" { return LISTOF; }
 "SetOf" { return SETOF; }
+"return" { return RET; }
+"is" { return IS; }
 
 "Unit" { return UNIT; }
 "Byte" { return BYTE; }
