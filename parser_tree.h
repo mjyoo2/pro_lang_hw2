@@ -10,6 +10,11 @@ typedef struct parse_tree{
 		struct parse_tree *parent;
 }parse_node;
 
+parse_node* make_node(char* new_data);
+parse_node* add_string(parse_node* parent, char* child);
+parse_node* add_child(parse_node* parent, parse_node* child);
+void last_add(pasre_node *temp, parse_node *new_node);
+
 parse_node* make_node(char* new_data){
 	  parse_node *new_node = (str_node *) malloc(sizeof(parse_node));
 	  strcpy(new_node->str, new_data);
@@ -18,6 +23,11 @@ parse_node* make_node(char* new_data){
     new_node->prev = NULL;
     new_node->child = make_node("DUMMY");
 	  return new_node;
+}
+
+parse_node* add_string(parse_node* parent, char* child){
+    parse_node *child_node = make_node(child);
+    return add_child(parent, child_node);
 }
 
 parse_node* add_child(parse_node* parent, parse_node* child){

@@ -40,7 +40,7 @@ extern int yyerror(const char *s);
 
 %%
 /* Rules */
-
+/*
 assignment: var_declear EQUAL value { last_add($1, "EQUAL");
                                     $$ = concat($1, $4); }
           | ID EQUAL value { first_add($3, "EQUAL");
@@ -94,12 +94,54 @@ term:		term MULT factor { last_add($1, "MULT");
     ;
 
 factor: NUMBER	{ $$ = make_node("NUMBER"); }
-    |   OPEN expr CLOSE	{ $$ = make_node("factor");
-                               make}
+    |   OPEN expr CLOSE	{ parse_node *parent = make_node("factor");
+                          add_child()}
     |		ID	{ $$ = make_node("ID"); }
-    |   MINUS factor { $$ = first_add($2, "MINUS"); }
-    |   PLUS factor { $$ = first_add($2, "PLUS"); }
-    ;
+    |   MINUS factor { parse_node *parent = make_node("factor");
+                      add_string(parent, "MINUS");
+                      $$ = add_child(parent, $2); }
+    |   PLUS factor { parse_node *parent = make_node("factor");
+                      add_string(parent, "PLUS");
+                      $$ = add_child(parent, $2);}
+    ; */
+
+
+pre_uni_op : INCR { $$ = make_node("INCR"); }
+       | DECR { $$ = make_node("DECR"); }
+       | EXCL { $$ = make_node("EXCL"); }
+       | PLUS { $$ = make_node("PLUS"); }
+       | MINUS { $$ = make_node("MINUS"); }
+       ;
+
+ass_op : PLUS_ASSIGNMENT { $$ = make_node("PLUS_ASSIGNMENT"); }
+       | MINUS_ASSIGNMENT { $$ = make_node("MINUS_ASSIGNMENT"); }
+       | MULT_ASSIGNMENT { $$ = make_node("MULT_ASSIGNMENT"); }
+       | DIV_ASSIGNMENT { $$ = make_node("DIV_ASSIGNMENT"); }
+       | MOD_ASSIGNMENT { $$ = make_node("MOD_ASSIGNMENT"); }
+       ;
+
+com_op: LANGLE { $$ = make_node("LANGLE"); }
+      | RANGLE { $$ = make_node("RANGLE"); }
+      | LE { $$ = make_node("LE"); }
+      | GE { $$ = make_node("GE"); }
+      ;
+
+in_op: IN { $$ = make_node("IN"); }
+     | NOTIN { $$ = make_node("NOTIN"); }
+     ;
+
+is_op: IS { $$ = make_node("IS"); }
+     | NOTIS { $$ = make_node("NOTIS"); }
+     ;
+
+add_op: PLUS{ $$ = make_node("PLUS"); }
+      | MINUS {$$ = make_node("MINUS"); }
+      ;
+
+mult_op: MOD { $$ = make_node("MOD"); }
+       | MULT { $$ = make_node("MULT"); }
+       | DIV { $$ = make_node("DIV"); }
+       ;
 
 %%
 /* User code */
