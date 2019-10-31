@@ -14,18 +14,14 @@ ID [a-zA-Z][a-zA-Z0-9]*
 SPACE [ \t\r]+
 
 %%
+
 "fun" { return FUNCTION; }
-"var" { return VAR; }
-"val" { return VAL; }
 "for" { return FOR; }
 
 "down" { return DOWN; }
 "step" { return STEP; }
 "when" { return WHEN; }
-"listOf" { return LISTOF; }
-"SetOf" { return SETOF; }
 "return" { return RET; }
-
 
 "Unit" { return UNIT; }
 "Byte" { return BYTE; }
@@ -35,47 +31,55 @@ SPACE [ \t\r]+
 "Float" { return FLOAT; }
 "Double" { return DOUBLE; }
 
-/* in operation */
+ /* in operation */
 "in" { return IN; }
 "!in" { return NOTIN; }
 
-/* is operation */
+ /* is operation */
 "is" { return IS; }
 "!is" { return NOTIS; }
 
-/* add operation */
+ /* add operation */
 "+"	{ return PLUS; }
 "-"	{ return MINUS; }
 
-/* multiplicative opeartion */
+ /* multiplicative opeartion */
 "*"	{ return MULT; }
 "/"	{ return DIV; }
 "%%" { return MOD; }
 
-/* comparision operation */
+ /* comparision operation */
 "<" { return LANGLE; }
 ">" { return RANGLE; }
 "<=" { return LE; }
 ">=" { return GE; }
 
-/* equality operation */
+ /* equality operation */
 "==" { return EQEQ; }
 "===" { return EQEQEQ; }
 "!=" { return EXCL_EQ; }
 "!==" { return EXCL_EQEQ; }
 
-/* assingnment and operation */
+ /* assingnment and operation */
+"="	{ return ASSIGNMENT; }
 "+=" { return PLUS_ASSIGNMENT; }
 "-=" { return MINUS_ASSIGNMENT; }
 "*=" { return MULT_ASSIGNMENT; }
 "/=" { return DIV_ASSIGNMENT; }
 "%%=" { return MOD_ASSIGNMENT; }
 
-/* uniary operation */
+ /* uniary operation */
 "++" { return INCR; }
 "--" { return DECR; }
 "!" { return EXCL; }
 
+ /* enum type */
+"listOf" { return LISTOF; }
+"SetOf" { return SETOF; }
+
+ /* variable operation */
+"var" { return VAR; }
+"val" { return VAL; }
 
 "," { return COMMA; }
 ".." { return FROMTO; }
@@ -87,19 +91,22 @@ SPACE [ \t\r]+
 "("	{ return OPEN; }
 ")"	{ return CLOSE; }
 
-"="	{ return EQUAL; }
+
 "\n"	{ return EOL; }
 
+
+ /* factor */
 {STRING} { yylval.str_var = yytext;
 					return STRING;}
+
+{ID}		{ yylval.str_var = yytext;
+					return ID;}
 
 {NUMBER} { yylval.double_var = atof(yytext);
 					return NUMBER; }
 
-{SPACE} { /* ignore */ }
 
-{ID}		{ yylval.str_var = yytext;
-					return ID;}
+{SPACE} { /* ignore */ }
 
 .	{  printf("%d\n", yytext[0]);
            yyerror("unexpected input");
