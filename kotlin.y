@@ -41,31 +41,100 @@ extern int yyerror(const char *s);
 %%
 /* Rules */
 
+for_ex : FOR OPEN in_ex CLOSE block {}
+        ;
+
+if_ex:
+
+if_state: IF cond_ex block {}
+        ;
+
+else_if_state:
+
+else_state:
+
+while_ex:
 
 
-declear_expression: var_op var_ex ASSIGNMENT value {}
-                  : var_op var_ex
 
-assign_expression: var_ex ass_op value{ parse_node* parent = make_node("assign_expression");
-                                        add_child(parent, $1);
-                                        add_child(parent, $2);
-                                        $$ = add_child(parent, $3);}
+block : CURLY_OPEN states CURLY_CLOSE {}
+      ;
+      
+states : state {}
+       | states state {}
+       ;
+
+state : expression {}
+      | expression EOL {}
+      | expression SEMI {}
+      ;
+
+expression: assign_ex {}
+          | declear_ex {}
+          | EOL {}
+          |
+
+in_ex : value in_op range {}
+      ;
+
+cond_ex : cond_state {}
+        | cond_ex bool_op cond_state {}
+        ;
+
+cond_state: value com_op value {}
+       | value equl_op value {}
+       | value is_op type {}
+       | OPEN cond_ex CLOSE {}
+       | value {}
+       ;
+
+range: value range_op value {}
+     | value range_op value STEP value {}
+     | value {}
+     ;
+
+arg_ex : var_ex { parent_node* parent = make_node("arg_ex");
+                  $$ = add_child(parent, $1); }
+       | arg_ex COMMA var_ex { parent_node* parent = make_node("arg_ex");
+                               add_child(parent, $1);
+                               add_string(parent, "COMMA");
+                               $$ = add_child(parent, $1); }
+       ;
+
+declear_ex: var_op var_ex ASSIGNMENT value { parse_node* parent = make_node("declear_ex");
+                                    add_child(parent, $1);
+                                    add_child(parent, $2);
+                                    $$ = add_child(parent, $3);}
+           | var_op ID ASSIGNMENT value { parse_node* parent = make_node("declear_ex");
+                                          add_child(parent, $1);
+                                          add_child(parent, $2);
+                                          $$ = add_child(parent, $3);}
+           | var_op var_ex { parse_node* parent = make_node("declear_ex");
+                             add_child(parent, $1);
+                             $$ = add_child(parent, $2); }
+           ;
+
+assign_ex: ID ass_op value{ parse_node* parent = make_node("assign_ex");
+                                    add_child(parent, $1);
+                                    add_child(parent, $2);
+                                    $$ = add_child(parent, $3);}
+          ;
 
 var_ex : ID COLON type {parse_node* parent = make_node("var_ex");
-                        add_child(parent, $1);
-                        add_child(parent, $2);
+                        add_string(parent, "ID");
+                        add_string(parent, "COLON");
                         $$ = add_child(parent, $3);}
-       | ID { $$ = $1; }
+       ;
 
 enum_value: enum_type OPEN tuple CLOSE { parse_node* parent = make_node("enum_value");
                                          add_child(parent, $1);
-                                         add_child(parent, $2);
+                                         add_string(parent, "OPEN");
                                          add_child(parent, $3);
-                                         $$ = add_child(parent, $4); }
+                                         $$ = add_string(parent, "CLOSE"); }
           ;
 
 tuple: tuple COMMA value { parse_node* parent = make_node("tuple");
-                           add_child(parent, $1);
+                           add_string(parent, "COMMA");
                            $$ = add_child(parent, $2);}
      | value { $$ = $1; }
      ;
@@ -75,7 +144,7 @@ value: mult_ex add_op mult_ex { parse_node* parent = make_node("value");
                                  add_child(parent, $2);
                                  $$ = add_child(parent, $3); }
       | mult_ex { $$ = $1; }
-      | enum { $$ = $1; }
+      | enum_value { $$ = $1; }
       ;
 
 mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
@@ -95,10 +164,20 @@ factor: ID { $$ = make_node("ID"); }
                             add_child(parent, $1);
                             $$ = add_child(parent, $2);}
       | OPEN value CLOSE { parse_node* parent = make_node("factor");
-                           add_child(parent, $1);
+                           add_string(parent, "OPEN");
                            add_child(parent, $2);
-                           $$ = add_child(parent, $3); }
+                           $$ = add_string(parent, "CLOSE"); }
+      | ID INCL ID { parse_node* parent = make_node("factor");
+                     add_string(parent, "ID");
+                     add_child(parent, "INCL");
+                     $$ = add_string(parent, "ID"); }
       ;
+
+/* operations */
+
+range_op : FROMTO { $$ = make_node("FROMTO"); }
+         | DOWNTO { $$ = make_node("DOWNTO"); }
+         ;
 
 pre_uni_op : INCR { $$ = make_node("INCR"); }
            | DECR { $$ = make_node("DECR"); }
@@ -142,13 +221,19 @@ mult_op: MOD { $$ = make_node("MOD"); }
        | DIV { $$ = make_node("DIV"); }
        ;
 
-enum_type: LISTOF { $$ = make_node("LISTOF"); }
-         | SETOF { $$ = make_node("SETOF"); }
-         ;
+equl_op: EQEQ { $$ = make_node("EQEQ"); }
+       | EQEQEQ { $$ = make_node("EQEQEQ"); }
+       | EXCL_EQ { $$ = make_node("EXCL_EQ"); }
+       | EXCL_EQEQ { $$ = make_node("EXCL_EQEQ"); }
+
+bool_op : AND { $$ = make_node("AND"); }
+          OR { $$ = make_node("OR"); }
 
 var_op : VAR { $$ = make_node("VAR"); }
        | VAL { $$ = make_node("VAL"); }
        ;
+
+/* types */
 
 type: BYTE { $$ = make_node("BYTE"); }
  		| SHORT	{ $$ = make_node("SHORT"); }
@@ -157,6 +242,10 @@ type: BYTE { $$ = make_node("BYTE"); }
  		| FLOAT { $$ = make_node("FLOAT"); }
  		| DOUBLE { $$ = make_node("DOUBLE"); }
     ;
+
+enum_type: LISTOF { $$ = make_node("LISTOF"); }
+         | SETOF { $$ = make_node("SETOF"); }
+         ;
 
 %%
 /* User code */

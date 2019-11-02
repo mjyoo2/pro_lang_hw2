@@ -16,7 +16,6 @@ SPACE [ \t\r]+
 %%
 
 "fun" { return FUNCTION; }
-"for" { return FOR; }
 
 "down" { return DOWN; }
 "step" { return STEP; }
@@ -81,18 +80,37 @@ SPACE [ \t\r]+
 "var" { return VAR; }
 "val" { return VAL; }
 
-"," { return COMMA; }
+ /* range operation */
 ".." { return FROMTO; }
+"downTo" { return DOWNTO; }
+
+ /* conditional token */
+"if" { return "IF"; }
+"else if" { return "ELSEIF"; }
+"else" { return "ELSE"; }
+
+ /* loop token */
+"for" { return FOR; }
+"while" { return WHILE; }
+
+ /* bool operation */
+"&&" { return AND; }
+"||" { return OR; }
+
+"step" { return STEP; }
+"," { return COMMA; }
 "{" { return CURLY_OPEN; }
 "}" { return CURLY_CLOSE; }
 "?" { return NULLABLE; }
 ":" { return COLON; }
+'.'{ return INCL; }
 
 "("	{ return OPEN; }
 ")"	{ return CLOSE; }
 
 
 "\n"	{ return EOL; }
+";" { return SEMI; }
 
 
  /* factor */
