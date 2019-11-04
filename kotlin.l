@@ -103,7 +103,7 @@ SPACE [ \t\r]+
 "}" { return CURLY_CLOSE; }
 "?" { return NULLABLE; }
 ":" { return COLON; }
-'.'{ return INCL; }
+'.' { return INCL; }
 
 "("	{ return OPEN; }
 ")"	{ return CLOSE; }
