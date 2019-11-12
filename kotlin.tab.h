@@ -117,8 +117,8 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 27 "kotlin.y" /* yacc.c:1909  */
-struct parse_tree *node; char *str_var; int int_var; double double_var
+#line 29 "kotlin.y" /* yacc.c:1909  */
+struct parse_tree *node; char *str_var; int int_var; double double_var;
 
 #line 124 "kotlin.tab.h" /* yacc.c:1909  */
 };

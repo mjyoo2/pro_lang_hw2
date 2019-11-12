@@ -3,13 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef YYDEBUG
-  yydebug = 1;
-#endif
-
 extern int yylex(void);
 extern void yyterminate();
 extern int yyerror(const char *s);
+
+yydebug = 1;
 
 typedef struct parse_tree{
 		char str[20];
@@ -28,7 +26,7 @@ void print_tree(parse_node *parent, int layers);
 
 %}
 
-%union{struct parse_tree *node; char *str_var; int int_var; double double_var}
+%union{struct parse_tree *node; char *str_var; int int_var; double double_var;}
 
 %type <int_var> file
 %type <node> code
@@ -193,15 +191,17 @@ code: def_func { parse_node* parent = make_node("code");
     ;
 
 /* component of code */
-def_func : FUNCTION arg_ex block { parse_node *parent = make_node("def_func");
+def_func : FUNCTION ID arg_ex block { parse_node *parent = make_node("def_func");
                                    add_string(parent, "FUNCTION");
-                                   add_child(parent, $2);
-                                   $$ = add_child(parent, $3); }
-         | FUNCTION arg_ex ASSIGNMENT value { parse_node *parent = make_node("def_func");
+								   add_string(parent, "ID");
+                                   add_child(parent, $3);
+                                   $$ = add_child(parent, $4); }
+         | FUNCTION ID arg_ex ASSIGNMENT value { parse_node *parent = make_node("def_func");
                                               add_string(parent, "FUNCTION");
-                                              add_child(parent, $2);
+											  add_string(parent, "ID");
+                                              add_child(parent, $3);
                                               add_string(parent, "ASSIGNMENT");
-                                              $$ = add_child(parent, $4); }
+                                              $$ = add_child(parent, $5); }
          ;
 
 arg_ex : OPEN arg_state CLOSE { parse_node *parent = make_node("arg_ex");

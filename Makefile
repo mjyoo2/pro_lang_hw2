@@ -8,7 +8,7 @@ SRC=main.c
 
 all:
 		flex $(LEX_SRC)
-		bison -d $(YACC_SRC) 
+		bison -d $(YACC_SRC) --debug 
 		gcc -o $(TARGET) $(CFG).tab.c lex.yy.c $(SRC) -lfl
 
 clean:

@@ -72,6 +72,8 @@ extern int yylex(void);
 extern void yyterminate();
 extern int yyerror(const char *s);
 
+yydebug = 1;
+
 typedef struct parse_tree{
 		char str[20];
 		struct parse_tree *child;
@@ -88,7 +90,7 @@ void last_add(parse_node *temp, parse_node *new_node);
 void print_tree(parse_node *parent, int layers);
 
 
-#line 92 "kotlin.tab.c" /* yacc.c:339  */
+#line 94 "kotlin.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -195,10 +197,10 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 27 "kotlin.y" /* yacc.c:355  */
-struct parse_tree *node; char *str_var; int int_var; double double_var
+#line 29 "kotlin.y" /* yacc.c:355  */
+struct parse_tree *node; char *str_var; int int_var; double double_var;
 
-#line 202 "kotlin.tab.c" /* yacc.c:355  */
+#line 204 "kotlin.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -215,7 +217,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 219 "kotlin.tab.c" /* yacc.c:358  */
+#line 221 "kotlin.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -455,7 +457,7 @@ union yyalloc
 #endif /* !YYCOPY_NEEDED */
 
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  7
+#define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
 #define YYLAST   250
 
@@ -466,7 +468,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  113
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  167
+#define YYNSTATES  168
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -519,18 +521,18 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   180,   180,   184,   186,   192,   196,   203,   207,   212,
-     214,   222,   228,   230,   235,   237,   240,   247,   249,   251,
-     253,   255,   257,   259,   263,   268,   276,   278,   281,   284,
-     290,   296,   300,   307,   312,   318,   320,   326,   330,   334,
-     338,   342,   346,   352,   353,   359,   363,   369,   375,   380,
-     386,   394,   399,   403,   406,   410,   413,   417,   418,   421,
-     425,   426,   429,   430,   431,   432,   435,   438,   444,   448,
-     457,   458,   461,   462,   463,   464,   465,   468,   469,   472,
-     473,   474,   475,   476,   477,   480,   481,   482,   483,   486,
-     487,   490,   491,   494,   495,   498,   499,   500,   503,   504,
-     505,   506,   509,   510,   513,   514,   519,   520,   521,   522,
-     523,   524,   527,   528
+       0,   182,   182,   186,   188,   194,   199,   207,   211,   216,
+     218,   226,   232,   234,   239,   241,   244,   251,   253,   255,
+     257,   259,   261,   263,   267,   272,   280,   282,   285,   288,
+     294,   300,   304,   311,   316,   322,   324,   330,   334,   338,
+     342,   346,   350,   356,   357,   363,   367,   373,   379,   384,
+     390,   398,   403,   407,   410,   414,   417,   421,   422,   425,
+     429,   430,   433,   434,   435,   436,   439,   442,   448,   452,
+     461,   462,   465,   466,   467,   468,   469,   472,   473,   476,
+     477,   478,   479,   480,   481,   484,   485,   486,   487,   490,
+     491,   494,   495,   498,   499,   502,   503,   504,   507,   508,
+     509,   510,   513,   514,   517,   518,   523,   524,   525,   526,
+     527,   528,   531,   532
 };
 #endif
 
@@ -574,10 +576,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -86
+#define YYPACT_NINF -87
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-86)))
+  (!!((Yystate) == (-87)))
 
 #define YYTABLE_NINF -1
 
@@ -588,23 +590,23 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int16 yypact[] =
 {
-       3,   -23,    25,     3,   -86,     7,   -25,   -86,   -86,   -27,
-     -86,   -12,   -15,   -86,   124,     1,   -86,   233,    58,   -86,
-     -86,    15,   -86,   -86,   -86,   -86,   -86,   -86,   -86,   -86,
-     124,   -86,   -86,     5,    11,   -86,   181,   167,   117,   -86,
-     -86,   172,     2,   172,   -86,    39,   -86,    10,   -86,   -86,
-     -86,   -21,   -86,   -86,   -86,    63,   -86,   -86,   -86,   -86,
-     -86,   -86,   -86,   -86,    68,    27,   -86,   -86,   178,   -86,
-     -86,   -86,   -86,   -86,   -86,   181,    40,    16,    37,   -86,
-     -86,   -86,   -86,   -86,   -86,   -86,    37,   124,   172,   -43,
-     -86,   103,   124,   -43,   -86,   -86,   -86,   -86,   172,    38,
-      32,   -86,   -29,    70,   167,   -86,   -86,    40,   -86,   -35,
-      27,   124,   -86,   -38,    79,   -86,   -86,   -86,   172,   -86,
-     -86,   -86,   -86,   -86,   -86,   -86,   -86,   -86,   -86,   124,
-     233,   124,    50,    69,   -86,   -43,   -86,   172,   -86,   124,
-     124,    37,   -86,   -86,   -86,   -86,   -86,   -86,   -86,    38,
-     -86,   -86,   124,   -86,   -43,   -86,   -86,   -86,   -86,    53,
-     -86,   -86,   -86,   124,    95,   124,   -86
+       3,    21,    29,     3,   -87,   -32,   -87,   -87,     7,   -25,
+     -27,   -87,   -17,   -19,   -87,   124,     1,   -87,   233,    45,
+     -87,   -87,     0,   -87,   -87,   -87,   -87,   -87,   -87,   -87,
+     -87,   124,   -87,   -87,   -10,    11,   -87,   181,   167,   117,
+     -87,   -87,   172,     2,   172,   -87,    39,   -87,    10,   -87,
+     -87,   -87,    30,   -87,   -87,   -87,    63,   -87,   -87,   -87,
+     -87,   -87,   -87,   -87,   -87,    68,    13,   -87,   -87,   178,
+     -87,   -87,   -87,   -87,   -87,   -87,   181,    42,    16,    34,
+     -87,   -87,   -87,   -87,   -87,   -87,   -87,    34,   124,   172,
+     -28,   -87,   103,   124,   -28,   -87,   -87,   -87,   -87,   172,
+      38,    36,   -87,   -29,    59,   167,   -87,   -87,    42,   -87,
+     -42,    13,   124,   -87,   -38,    79,   -87,   -87,   -87,   172,
+     -87,   -87,   -87,   -87,   -87,   -87,   -87,   -87,   -87,   -87,
+     124,   233,   124,    41,    83,   -87,   -28,   -87,   172,   -87,
+     124,   124,    34,   -87,   -87,   -87,   -87,   -87,   -87,   -87,
+      38,   -87,   -87,   124,   -87,   -28,   -87,   -87,   -87,   -87,
+      70,   -87,   -87,   -87,   124,    95,   124,   -87
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -612,43 +614,43 @@ static const yytype_int16 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       0,     0,     0,     2,     3,     0,     0,     1,     4,     0,
-       8,     0,     0,     9,     0,     0,     5,     0,     0,     7,
-      63,    62,    60,    75,    76,    72,    73,    74,   112,   113,
-       0,    58,     6,    57,    61,    64,     0,     0,     0,   104,
-     105,     0,     0,     0,    19,     0,    12,    14,    23,    22,
-      20,    26,    21,    18,    17,     0,   106,   107,   108,   109,
-     110,   111,    50,    10,     0,     0,    93,    94,     0,    96,
-      97,    95,    77,    78,    66,     0,    65,     0,    51,    55,
-      84,    79,    80,    82,    81,    83,    24,     0,     0,     0,
-      35,    41,     0,     0,    11,    13,    15,    16,     0,     0,
-      28,    27,     0,    48,    68,    67,    56,    59,    53,     0,
-      55,     0,    49,     0,    41,   102,   103,    30,     0,    91,
-      92,    85,    86,    87,    88,    98,    99,   100,   101,     0,
-       0,     0,     0,     0,    34,     0,    33,     0,    29,     0,
-       0,    69,    54,    52,    40,    36,    37,    39,    38,     0,
-      89,    90,     0,    31,     0,    47,    46,    25,    42,    45,
-      32,    70,    71,     0,    43,     0,    44
+       0,     0,     0,     2,     3,     0,     1,     4,     0,     0,
+       0,     8,     0,     0,     9,     0,     0,     5,     0,     0,
+       7,    63,    62,    60,    75,    76,    72,    73,    74,   112,
+     113,     0,    58,     6,    57,    61,    64,     0,     0,     0,
+     104,   105,     0,     0,     0,    19,     0,    12,    14,    23,
+      22,    20,    26,    21,    18,    17,     0,   106,   107,   108,
+     109,   110,   111,    50,    10,     0,     0,    93,    94,     0,
+      96,    97,    95,    77,    78,    66,     0,    65,     0,    51,
+      55,    84,    79,    80,    82,    81,    83,    24,     0,     0,
+       0,    35,    41,     0,     0,    11,    13,    15,    16,     0,
+       0,    28,    27,     0,    48,    68,    67,    56,    59,    53,
+       0,    55,     0,    49,     0,    41,   102,   103,    30,     0,
+      91,    92,    85,    86,    87,    88,    98,    99,   100,   101,
+       0,     0,     0,     0,     0,    34,     0,    33,     0,    29,
+       0,     0,    69,    54,    52,    40,    36,    37,    39,    38,
+       0,    89,    90,     0,    31,     0,    47,    46,    25,    42,
+      45,    32,    70,    71,     0,    43,     0,    44
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -86,   -86,   -86,   113,   114,   -86,   -85,   -86,    73,   -86,
-     -86,   -86,   -86,   -86,   -86,    41,   -86,   -42,    24,   -86,
-     -86,   -86,   -86,   -11,   -86,   -36,   -14,    76,   -33,   -86,
-     -86,   -86,   -86,   -86,   -86,   -86,   -86,   -86,   -86,   -86,
-     -86,   -86,    18,   -86
+     -87,   -87,   -87,   111,   108,   -87,   -86,   -87,    96,   -87,
+     -87,   -87,   -87,   -87,   -87,    40,   -87,   -43,    25,   -87,
+     -87,   -87,   -87,   -12,   -87,   -37,   -15,    76,   -34,   -87,
+     -87,   -87,   -87,   -87,   -87,   -87,   -87,   -87,   -87,   -87,
+     -87,   -87,    17,   -87
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int16 yydefgoto[] =
 {
-      -1,     2,     3,     4,     6,    12,    16,    45,    46,    47,
-      48,    49,    50,    51,   100,   101,    52,    89,    90,   132,
-     158,    53,    54,    13,    31,    78,    91,    33,    34,    35,
-     163,    36,    74,    87,   129,   152,   130,    68,    75,   131,
-     118,    55,    62,    37
+      -1,     2,     3,     4,     9,    13,    17,    46,    47,    48,
+      49,    50,    51,    52,   101,   102,    53,    90,    91,   133,
+     159,    54,    55,    14,    32,    79,    92,    34,    35,    36,
+     164,    37,    75,    88,   130,   153,   131,    69,    76,   132,
+     119,    56,    63,    38
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -656,52 +658,52 @@ static const yytype_int16 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      32,    93,    86,    76,   117,    38,   139,    63,   134,     1,
-      14,     9,   115,   116,   136,    15,    65,   115,   116,    20,
-      21,    22,   111,    79,    79,     7,   144,    66,    67,   142,
-      98,    99,    17,    15,    17,    69,    70,    71,    23,    24,
-       5,   109,   107,    38,   103,    18,   113,    39,    40,    19,
-     153,    41,    72,    73,    42,    43,   135,    25,    26,    27,
-      28,    29,     9,   110,   157,    92,    44,   102,   141,   160,
-       5,    10,   104,   112,   114,    96,    97,    64,   133,    77,
-     108,    72,    73,   137,    99,    39,    40,   150,   151,    41,
-      79,   105,    42,    43,   111,   154,    15,   143,    94,   119,
-     120,   161,   162,   165,    44,   140,   121,   122,   123,   124,
-     125,   126,   127,   128,   149,   146,     8,   148,    95,    11,
-      20,    21,    22,   119,   120,   155,   156,    20,    21,    22,
-     121,   122,   123,   124,   125,   126,   127,   128,   159,    23,
-      24,   138,   145,   105,   106,     0,    23,    24,   147,   164,
-       0,   166,    80,    81,    82,    83,    84,    85,    25,    26,
-      27,    28,    29,     0,     0,    25,    26,    27,    28,    29,
-      20,    21,    22,     0,     0,    20,    21,    22,     0,     0,
-      77,    20,    21,    22,    20,    21,     0,    30,     0,    23,
-      24,     0,     0,     0,    23,    24,     0,     0,     0,     0,
-      23,    24,     0,    23,    24,     0,     0,     0,    25,    26,
-      27,    28,    29,    25,    26,    27,    28,    29,     0,    25,
-      26,    27,    25,    26,    27,     0,     0,     0,     0,     0,
-      77,     0,     0,     0,     0,    88,     0,     0,     0,     0,
-       0,    30,     0,     0,    30,    56,    57,    58,    59,    60,
-      61
+      33,    94,    87,    77,   118,    39,   140,    64,   135,     1,
+      15,    10,    67,    68,   137,   112,    66,   116,   117,    21,
+      22,    23,   143,    80,    80,     5,   145,   116,   117,     6,
+      16,     8,    18,    16,    18,    70,    71,    72,    24,    25,
+      19,   110,   108,    39,   104,    20,   114,    40,    41,    10,
+     154,    42,    73,    74,    43,    44,   136,    26,    27,    28,
+      29,    30,    65,   111,   158,    93,    45,   103,   142,   161,
+       8,    11,   105,   113,   115,    97,    98,   106,   134,    78,
+     109,    99,   100,    73,    74,    40,    41,   138,   100,    42,
+      80,   112,    43,    44,   141,   155,    16,   144,    95,   120,
+     121,   151,   152,   166,    45,   150,   122,   123,   124,   125,
+     126,   127,   128,   129,     7,   147,    12,   149,   162,   163,
+      21,    22,    23,   120,   121,   156,   157,    21,    22,    23,
+     122,   123,   124,   125,   126,   127,   128,   129,   160,    24,
+      25,   139,    96,   106,   146,   107,    24,    25,   148,   165,
+       0,   167,    81,    82,    83,    84,    85,    86,    26,    27,
+      28,    29,    30,     0,     0,    26,    27,    28,    29,    30,
+      21,    22,    23,     0,     0,    21,    22,    23,     0,     0,
+      78,    21,    22,    23,    21,    22,     0,    31,     0,    24,
+      25,     0,     0,     0,    24,    25,     0,     0,     0,     0,
+      24,    25,     0,    24,    25,     0,     0,     0,    26,    27,
+      28,    29,    30,    26,    27,    28,    29,    30,     0,    26,
+      27,    28,    26,    27,    28,     0,     0,     0,     0,     0,
+      78,     0,     0,     0,     0,    89,     0,     0,     0,     0,
+       0,    31,     0,     0,    31,    57,    58,    59,    60,    61,
+      62
 };
 
 static const yytype_int16 yycheck[] =
 {
-      14,    43,    38,    36,    89,     4,    35,    18,    93,     6,
-      35,     4,    55,    56,    99,    58,    30,    55,    56,     3,
-       4,     5,    57,    37,    38,     0,    64,    22,    23,    64,
-      51,    52,    61,    58,    61,    24,    25,    26,    22,    23,
-      63,    77,    75,     4,    55,    57,    88,    46,    47,    64,
-     135,    50,    41,    42,    53,    54,    98,    41,    42,    43,
-      44,    45,     4,    77,   149,    63,    65,     4,   104,   154,
-      63,    64,     4,    87,    88,    65,    66,    62,    92,    63,
-      64,    41,    42,    51,    52,    46,    47,    18,    19,    50,
-     104,    64,    53,    54,    57,   137,    58,   111,    59,    20,
-      21,    48,    49,     8,    65,    35,    27,    28,    29,    30,
-      31,    32,    33,    34,    64,   129,     3,   131,    45,     5,
-       3,     4,     5,    20,    21,   139,   140,     3,     4,     5,
-      27,    28,    29,    30,    31,    32,    33,    34,   152,    22,
-      23,   100,   118,    64,    68,    -1,    22,    23,   130,   163,
-      -1,   165,    35,    36,    37,    38,    39,    40,    41,    42,
+      15,    44,    39,    37,    90,     4,    35,    19,    94,     6,
+      35,     4,    22,    23,   100,    57,    31,    55,    56,     3,
+       4,     5,    64,    38,    39,     4,    64,    55,    56,     0,
+      58,    63,    61,    58,    61,    24,    25,    26,    22,    23,
+      57,    78,    76,     4,    56,    64,    89,    46,    47,     4,
+     136,    50,    41,    42,    53,    54,    99,    41,    42,    43,
+      44,    45,    62,    78,   150,    63,    65,     4,   105,   155,
+      63,    64,     4,    88,    89,    65,    66,    64,    93,    63,
+      64,    51,    52,    41,    42,    46,    47,    51,    52,    50,
+     105,    57,    53,    54,    35,   138,    58,   112,    59,    20,
+      21,    18,    19,     8,    65,    64,    27,    28,    29,    30,
+      31,    32,    33,    34,     3,   130,     8,   132,    48,    49,
+       3,     4,     5,    20,    21,   140,   141,     3,     4,     5,
+      27,    28,    29,    30,    31,    32,    33,    34,   153,    22,
+      23,   101,    46,    64,   119,    69,    22,    23,   131,   164,
+      -1,   166,    35,    36,    37,    38,    39,    40,    41,    42,
       43,    44,    45,    -1,    -1,    41,    42,    43,    44,    45,
        3,     4,     5,    -1,    -1,     3,     4,     5,    -1,    -1,
       63,     3,     4,     5,     3,     4,    -1,    63,    -1,    22,
@@ -718,23 +720,23 @@ static const yytype_int16 yycheck[] =
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,     6,    68,    69,    70,    63,    71,     0,    70,     4,
-      64,    71,    72,    90,    35,    58,    73,    61,    57,    64,
-       3,     4,     5,    22,    23,    41,    42,    43,    44,    45,
-      63,    91,    93,    94,    95,    96,    98,   110,     4,    46,
-      47,    50,    53,    54,    65,    74,    75,    76,    77,    78,
-      79,    80,    83,    88,    89,   108,    12,    13,    14,    15,
-      16,    17,   109,    90,    62,    93,    22,    23,   104,    24,
-      25,    26,    41,    42,    99,   105,    95,    63,    92,    93,
-      35,    36,    37,    38,    39,    40,    92,   100,    63,    84,
-      85,    93,    63,    84,    59,    75,    65,    66,    51,    52,
-      81,    82,     4,    90,     4,    64,    94,    95,    64,    92,
-      93,    57,    93,    84,    93,    55,    56,    73,   107,    20,
-      21,    27,    28,    29,    30,    31,    32,    33,    34,   101,
-     103,   106,    86,    93,    73,    84,    73,    51,    82,    35,
-      35,    92,    64,    93,    64,    85,    93,   109,    93,    64,
-      18,    19,   102,    73,    84,    93,    93,    73,    87,    93,
-      73,    48,    49,    97,    93,     8,    93
+       0,     6,    68,    69,    70,     4,     0,    70,    63,    71,
+       4,    64,    71,    72,    90,    35,    58,    73,    61,    57,
+      64,     3,     4,     5,    22,    23,    41,    42,    43,    44,
+      45,    63,    91,    93,    94,    95,    96,    98,   110,     4,
+      46,    47,    50,    53,    54,    65,    74,    75,    76,    77,
+      78,    79,    80,    83,    88,    89,   108,    12,    13,    14,
+      15,    16,    17,   109,    90,    62,    93,    22,    23,   104,
+      24,    25,    26,    41,    42,    99,   105,    95,    63,    92,
+      93,    35,    36,    37,    38,    39,    40,    92,   100,    63,
+      84,    85,    93,    63,    84,    59,    75,    65,    66,    51,
+      52,    81,    82,     4,    90,     4,    64,    94,    95,    64,
+      92,    93,    57,    93,    84,    93,    55,    56,    73,   107,
+      20,    21,    27,    28,    29,    30,    31,    32,    33,    34,
+     101,   103,   106,    86,    93,    73,    84,    73,    51,    82,
+      35,    35,    92,    64,    93,    64,    85,    93,   109,    93,
+      64,    18,    19,   102,    73,    84,    93,    93,    73,    87,
+      93,    73,    48,    49,    97,    93,     8,    93
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -757,7 +759,7 @@ static const yytype_uint8 yyr1[] =
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     1,     1,     2,     3,     4,     3,     2,     1,
+       0,     2,     1,     1,     2,     4,     5,     3,     2,     1,
        3,     3,     1,     2,     1,     2,     2,     1,     1,     1,
        1,     1,     1,     1,     2,     5,     1,     2,     2,     3,
        3,     3,     4,     2,     3,     1,     3,     3,     3,     3,
@@ -1445,819 +1447,821 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 180 "kotlin.y" /* yacc.c:1646  */
+#line 182 "kotlin.y" /* yacc.c:1646  */
     { print_tree((yyvsp[0].node), 0);
              (yyval.int_var) = 0;}
-#line 1452 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1454 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 184 "kotlin.y" /* yacc.c:1646  */
+#line 186 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("code");
                  (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1459 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1461 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 186 "kotlin.y" /* yacc.c:1646  */
+#line 188 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("code");
                       add_child(parent, (yyvsp[-1].node));
                       (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1467 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1469 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 192 "kotlin.y" /* yacc.c:1646  */
+#line 194 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("def_func");
                                    add_string(parent, "FUNCTION");
+								   add_string(parent, "ID");
                                    add_child(parent, (yyvsp[-1].node));
                                    (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1476 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1479 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 196 "kotlin.y" /* yacc.c:1646  */
+#line 199 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("def_func");
                                               add_string(parent, "FUNCTION");
+											  add_string(parent, "ID");
                                               add_child(parent, (yyvsp[-2].node));
                                               add_string(parent, "ASSIGNMENT");
                                               (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1486 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1490 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 203 "kotlin.y" /* yacc.c:1646  */
+#line 207 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("arg_ex");
                                 add_string(parent, "OPEN");
                                 add_child(parent, (yyvsp[-1].node));
                                 (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1495 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1499 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 207 "kotlin.y" /* yacc.c:1646  */
+#line 211 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("arg_ex");
                       add_string(parent, "OPEN");
                       (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1503 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1507 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 212 "kotlin.y" /* yacc.c:1646  */
+#line 216 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("arg_ex");
                   (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1510 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1514 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 214 "kotlin.y" /* yacc.c:1646  */
+#line 218 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("arg_ex");
                                add_child(parent, (yyvsp[-2].node));
                                add_string(parent, "COMMA");
                                (yyval.node) = add_child(parent, (yyvsp[-2].node)); }
-#line 1519 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1523 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 222 "kotlin.y" /* yacc.c:1646  */
+#line 226 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("block");
                                         add_string(parent, "CURLY_OPEN");
                                         add_child(parent, (yyvsp[-1].node));
                                         (yyval.node) = add_string(parent, "CURLY_CLOSE"); }
-#line 1528 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1532 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 228 "kotlin.y" /* yacc.c:1646  */
+#line 232 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("states");
                  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1535 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1539 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 230 "kotlin.y" /* yacc.c:1646  */
+#line 234 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("states");
                         add_child(parent, (yyvsp[-1].node));
                         (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1543 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1547 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 235 "kotlin.y" /* yacc.c:1646  */
+#line 239 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("state");
                      (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1550 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1554 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 237 "kotlin.y" /* yacc.c:1646  */
+#line 241 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("state");
                          add_child(parent, (yyvsp[-1].node));
                          (yyval.node) = add_string(parent, "EOL"); }
-#line 1558 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1562 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 240 "kotlin.y" /* yacc.c:1646  */
+#line 244 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("state");
                           add_child(parent, (yyvsp[-1].node));
                           (yyval.node) = add_string(parent, "SEMI"); }
-#line 1566 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1570 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 247 "kotlin.y" /* yacc.c:1646  */
+#line 251 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
                         (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1573 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1577 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 249 "kotlin.y" /* yacc.c:1646  */
+#line 253 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
                         (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1580 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1584 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 251 "kotlin.y" /* yacc.c:1646  */
+#line 255 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
                   (yyval.node) = add_string(parent, "EOF"); }
-#line 1587 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1591 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 253 "kotlin.y" /* yacc.c:1646  */
+#line 257 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
                     (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1594 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1598 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 255 "kotlin.y" /* yacc.c:1646  */
+#line 259 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
                        (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1601 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1605 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 257 "kotlin.y" /* yacc.c:1646  */
+#line 261 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
                      (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1608 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1612 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 259 "kotlin.y" /* yacc.c:1646  */
+#line 263 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
                      (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1615 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1619 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 263 "kotlin.y" /* yacc.c:1646  */
+#line 267 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("function_ex");
                          add_string(parent, "ID");
                          (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1623 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1627 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 268 "kotlin.y" /* yacc.c:1646  */
+#line 272 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("for_ex");
                                       add_string(parent, "FOR");
                                       add_string(parent, "OPEN");
                                       add_child(parent, (yyvsp[-2].node));
                                       add_string(parent, "CLOSE");
                                       (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1634 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1638 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 276 "kotlin.y" /* yacc.c:1646  */
+#line 280 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_ex");
                   (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1641 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1645 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 278 "kotlin.y" /* yacc.c:1646  */
+#line 282 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_ex");
                              add_child(parent, (yyvsp[-1].node));
                              (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1649 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1653 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 281 "kotlin.y" /* yacc.c:1646  */
+#line 285 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_ex");
                                 add_child(parent, (yyvsp[-1].node));
                                 (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1657 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1661 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 284 "kotlin.y" /* yacc.c:1646  */
+#line 288 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_ex");
                                            add_child(parent, (yyvsp[-2].node));
                                            add_child(parent, (yyvsp[-1].node));
                                            (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1666 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1670 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 290 "kotlin.y" /* yacc.c:1646  */
+#line 294 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_state");
                              add_string(parent, "IF");
                              add_child(parent, (yyvsp[-1].node));
                              (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1675 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1679 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 296 "kotlin.y" /* yacc.c:1646  */
+#line 300 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("else_if_state");
                                       add_string(parent, "ELSEIF");
                                       add_child(parent, (yyvsp[-1].node));
                                       (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1684 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1688 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 300 "kotlin.y" /* yacc.c:1646  */
+#line 304 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("else_if_state");
                                                     add_child(parent, (yyvsp[-3].node));
                                                     add_string(parent, "ELSEIF");
                                                     add_child(parent, (yyvsp[-1].node));
                                                     (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1694 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1698 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 307 "kotlin.y" /* yacc.c:1646  */
+#line 311 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("else_state");
                          add_string(parent, "ELSE");
                          (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1702 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1706 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 312 "kotlin.y" /* yacc.c:1646  */
+#line 316 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("while_ex");
                                 add_string(parent, "WHILE");
                                 add_child(parent, (yyvsp[-1].node));
                                 (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1711 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1715 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 318 "kotlin.y" /* yacc.c:1646  */
+#line 322 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_ex");
                        (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1718 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1722 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 320 "kotlin.y" /* yacc.c:1646  */
+#line 324 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_ex");
                                        add_child(parent, (yyvsp[-2].node));
                                        add_child(parent, (yyvsp[-1].node));
                                        (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1727 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1731 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 326 "kotlin.y" /* yacc.c:1646  */
+#line 330 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_state");
                                  add_child(parent, (yyvsp[-2].node));
                                  add_child(parent, (yyvsp[-1].node));
                                  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1736 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1740 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 330 "kotlin.y" /* yacc.c:1646  */
+#line 334 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_state");
                                add_child(parent, (yyvsp[-2].node));
                                add_child(parent, (yyvsp[-1].node));
                                (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1745 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1749 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 334 "kotlin.y" /* yacc.c:1646  */
+#line 338 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_state");
                             add_child(parent, (yyvsp[-2].node));
                             add_child(parent, (yyvsp[-1].node));
                             (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1754 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1758 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 338 "kotlin.y" /* yacc.c:1646  */
+#line 342 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_state");
                               add_string(parent, "OPEN");
                               add_child(parent, (yyvsp[-1].node));
                               (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1763 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1767 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 342 "kotlin.y" /* yacc.c:1646  */
+#line 346 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("in_ex");
                  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1770 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1774 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 346 "kotlin.y" /* yacc.c:1646  */
+#line 350 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("in_ex");
                             add_child(parent, (yyvsp[-2].node));
                             add_child(parent, (yyvsp[-1].node));
                             (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1779 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1783 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 352 "kotlin.y" /* yacc.c:1646  */
+#line 356 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("range"); }
-#line 1785 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1789 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 353 "kotlin.y" /* yacc.c:1646  */
+#line 357 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("range");
                                          add_child(parent, (yyvsp[-4].node));
                                          add_child(parent, (yyvsp[-3].node));
                                          add_child(parent, (yyvsp[-2].node));
                                          add_string(parent, "STEP");
                                          (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1796 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1800 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 359 "kotlin.y" /* yacc.c:1646  */
+#line 363 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("range");
                (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1803 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1807 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 363 "kotlin.y" /* yacc.c:1646  */
+#line 367 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("declear_ex");
                                              add_child(parent, (yyvsp[-3].node));
                                              add_child(parent, (yyvsp[-2].node));
                                              add_string(parent, "ASSIGNMNET");
                                              (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1813 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1817 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 369 "kotlin.y" /* yacc.c:1646  */
+#line 373 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("declear_ex");
                                           add_child(parent, (yyvsp[-3].node));
                                           add_string(parent, "ID");
                                           add_string(parent, "ASSIGNMNET");
                                           (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1823 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1827 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 375 "kotlin.y" /* yacc.c:1646  */
+#line 379 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("declear_ex");
                              add_child(parent, (yyvsp[-1].node));
                              (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1831 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1835 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 380 "kotlin.y" /* yacc.c:1646  */
+#line 384 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("assign_ex");
                             add_string(parent, "ID");
                             add_child(parent, (yyvsp[-1].node));
                             (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1840 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1844 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 386 "kotlin.y" /* yacc.c:1646  */
+#line 390 "kotlin.y" /* yacc.c:1646  */
     {parse_node* parent = make_node("var_ex");
                         add_string(parent, "ID");
                         add_string(parent, "COLON");
                         (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1849 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1853 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 394 "kotlin.y" /* yacc.c:1646  */
+#line 398 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("enum_value");
                               add_child(parent, (yyvsp[-1].node));
 							  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1857 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1861 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 399 "kotlin.y" /* yacc.c:1646  */
+#line 403 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("tuple");
                            add_child(parent, (yyvsp[-2].node));
                            add_string(parent, "COMMA");
                            (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1866 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1870 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 403 "kotlin.y" /* yacc.c:1646  */
+#line 407 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("tuple");
                     add_string(parent, "OPEN");
                     (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1874 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1878 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 406 "kotlin.y" /* yacc.c:1646  */
+#line 410 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("tuple");
                           add_string(parent, "OPEN");
                           add_child(parent, (yyvsp[-1].node));
                           (yyval.node) = add_string(parent, "CLOSE");}
-#line 1883 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1887 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 410 "kotlin.y" /* yacc.c:1646  */
+#line 414 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = (yyvsp[0].node); }
-#line 1889 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1893 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 413 "kotlin.y" /* yacc.c:1646  */
+#line 417 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("value");
                                  add_child(parent, (yyvsp[-2].node));
                                  add_child(parent, (yyvsp[-1].node));
                                  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1898 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1902 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 417 "kotlin.y" /* yacc.c:1646  */
+#line 421 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = (yyvsp[0].node); }
-#line 1904 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1908 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 418 "kotlin.y" /* yacc.c:1646  */
+#line 422 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = (yyvsp[0].node); }
-#line 1910 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1914 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 421 "kotlin.y" /* yacc.c:1646  */
+#line 425 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("mult_ex");
                                   add_child(parent, (yyvsp[-2].node));
                                   add_child(parent, (yyvsp[-1].node));
                                   (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1919 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1923 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 425 "kotlin.y" /* yacc.c:1646  */
+#line 429 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("STRING"); }
-#line 1925 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1929 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 426 "kotlin.y" /* yacc.c:1646  */
+#line 430 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = (yyvsp[0].node); }
-#line 1931 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1935 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 429 "kotlin.y" /* yacc.c:1646  */
+#line 433 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("ID"); }
-#line 1937 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1941 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 430 "kotlin.y" /* yacc.c:1646  */
+#line 434 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("NUMBER"); }
-#line 1943 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1947 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 431 "kotlin.y" /* yacc.c:1646  */
+#line 435 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = (yyvsp[0].node); }
-#line 1949 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1953 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 432 "kotlin.y" /* yacc.c:1646  */
+#line 436 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("factor");
                             add_child(parent, (yyvsp[-1].node));
                             (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1957 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1961 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 435 "kotlin.y" /* yacc.c:1646  */
+#line 439 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("factor");
                             add_child(parent, (yyvsp[-1].node));
                             (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1965 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1969 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 438 "kotlin.y" /* yacc.c:1646  */
+#line 442 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("factor");
                            add_string(parent, "OPEN");
                            add_child(parent, (yyvsp[-1].node));
                            (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1974 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1978 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 444 "kotlin.y" /* yacc.c:1646  */
+#line 448 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("member");
                      add_string(parent, "ID");
                      add_string(parent, "INCL");
                      (yyval.node) = add_string(parent, "ID"); }
-#line 1983 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1987 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 448 "kotlin.y" /* yacc.c:1646  */
+#line 452 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("factor");
                            add_string(parent, "ID");
                            add_string(parent, "INCL");
                            add_string(parent, "ID");
                            (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1993 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1997 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 457 "kotlin.y" /* yacc.c:1646  */
+#line 461 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("FROMTO"); }
-#line 1999 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2003 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 458 "kotlin.y" /* yacc.c:1646  */
+#line 462 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DOWNTO"); }
-#line 2005 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2009 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 461 "kotlin.y" /* yacc.c:1646  */
+#line 465 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("INCR"); }
-#line 2011 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2015 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 462 "kotlin.y" /* yacc.c:1646  */
+#line 466 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DECR"); }
-#line 2017 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2021 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 463 "kotlin.y" /* yacc.c:1646  */
+#line 467 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EXCL"); }
-#line 2023 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2027 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 464 "kotlin.y" /* yacc.c:1646  */
+#line 468 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("PLUS"); }
-#line 2029 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2033 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 465 "kotlin.y" /* yacc.c:1646  */
+#line 469 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MINUS"); }
-#line 2035 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2039 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 468 "kotlin.y" /* yacc.c:1646  */
+#line 472 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("INCR"); }
-#line 2041 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2045 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 469 "kotlin.y" /* yacc.c:1646  */
+#line 473 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DECR"); }
-#line 2047 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2051 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 472 "kotlin.y" /* yacc.c:1646  */
+#line 476 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("PLUS_ASSIGNMENT"); }
-#line 2053 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2057 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 473 "kotlin.y" /* yacc.c:1646  */
+#line 477 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MINUS_ASSIGNMENT"); }
-#line 2059 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2063 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 474 "kotlin.y" /* yacc.c:1646  */
+#line 478 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MULT_ASSIGNMENT"); }
-#line 2065 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2069 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 475 "kotlin.y" /* yacc.c:1646  */
+#line 479 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DIV_ASSIGNMENT"); }
-#line 2071 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2075 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 476 "kotlin.y" /* yacc.c:1646  */
+#line 480 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MOD_ASSIGNMENT"); }
-#line 2077 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2081 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 477 "kotlin.y" /* yacc.c:1646  */
+#line 481 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("ASSIGNMENT"); }
-#line 2083 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2087 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 480 "kotlin.y" /* yacc.c:1646  */
+#line 484 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("LANGLE"); }
-#line 2089 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2093 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 481 "kotlin.y" /* yacc.c:1646  */
+#line 485 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("RANGLE"); }
-#line 2095 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2099 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 482 "kotlin.y" /* yacc.c:1646  */
+#line 486 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("LE"); }
-#line 2101 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2105 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 483 "kotlin.y" /* yacc.c:1646  */
+#line 487 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("GE"); }
-#line 2107 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2111 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 486 "kotlin.y" /* yacc.c:1646  */
+#line 490 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("IN"); }
-#line 2113 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2117 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 487 "kotlin.y" /* yacc.c:1646  */
+#line 491 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("NOTIN"); }
-#line 2119 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2123 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 490 "kotlin.y" /* yacc.c:1646  */
+#line 494 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("IS"); }
-#line 2125 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2129 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 491 "kotlin.y" /* yacc.c:1646  */
+#line 495 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("NOTIS"); }
-#line 2131 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2135 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 494 "kotlin.y" /* yacc.c:1646  */
+#line 498 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("PLUS"); }
-#line 2137 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2141 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 495 "kotlin.y" /* yacc.c:1646  */
+#line 499 "kotlin.y" /* yacc.c:1646  */
     {(yyval.node) = make_node("MINUS"); }
-#line 2143 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2147 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 498 "kotlin.y" /* yacc.c:1646  */
+#line 502 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MOD"); }
-#line 2149 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2153 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 499 "kotlin.y" /* yacc.c:1646  */
+#line 503 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MULT"); }
-#line 2155 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2159 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 500 "kotlin.y" /* yacc.c:1646  */
+#line 504 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DIV"); }
-#line 2161 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2165 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 503 "kotlin.y" /* yacc.c:1646  */
+#line 507 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EQEQ"); }
-#line 2167 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2171 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 504 "kotlin.y" /* yacc.c:1646  */
+#line 508 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EQEQEQ"); }
-#line 2173 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2177 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 505 "kotlin.y" /* yacc.c:1646  */
+#line 509 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EXCL_EQ"); }
-#line 2179 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2183 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 506 "kotlin.y" /* yacc.c:1646  */
+#line 510 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EXCL_EQEQ"); }
-#line 2185 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2189 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 509 "kotlin.y" /* yacc.c:1646  */
+#line 513 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("AND"); }
-#line 2191 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2195 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 103:
-#line 510 "kotlin.y" /* yacc.c:1646  */
+#line 514 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("OR"); }
-#line 2197 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2201 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 104:
-#line 513 "kotlin.y" /* yacc.c:1646  */
+#line 517 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("VAR"); }
-#line 2203 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2207 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 105:
-#line 514 "kotlin.y" /* yacc.c:1646  */
+#line 518 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("VAL"); }
-#line 2209 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2213 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 519 "kotlin.y" /* yacc.c:1646  */
+#line 523 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("BYTE"); }
-#line 2215 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2219 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 107:
-#line 520 "kotlin.y" /* yacc.c:1646  */
+#line 524 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("SHORT"); }
-#line 2221 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2225 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 108:
-#line 521 "kotlin.y" /* yacc.c:1646  */
+#line 525 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("INT"); }
-#line 2227 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2231 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 109:
-#line 522 "kotlin.y" /* yacc.c:1646  */
+#line 526 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("LONG"); }
-#line 2233 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2237 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 110:
-#line 523 "kotlin.y" /* yacc.c:1646  */
+#line 527 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("FLOAT"); }
-#line 2239 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2243 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 111:
-#line 524 "kotlin.y" /* yacc.c:1646  */
+#line 528 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DOUBLE"); }
-#line 2245 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2249 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 527 "kotlin.y" /* yacc.c:1646  */
+#line 531 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("LISTOF"); }
-#line 2251 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2255 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 528 "kotlin.y" /* yacc.c:1646  */
+#line 532 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("SETOF"); }
-#line 2257 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2261 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2261 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2265 "kotlin.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2485,7 +2489,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 531 "kotlin.y" /* yacc.c:1906  */
+#line 535 "kotlin.y" /* yacc.c:1906  */
 
 /* User code */
 int yyerror(const char *s)
