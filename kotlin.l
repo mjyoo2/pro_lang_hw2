@@ -85,9 +85,9 @@ SPACE [ \t\r]+
 "downTo" { return DOWNTO; }
 
  /* conditional token */
-"if" { return "IF"; }
-"else if" { return "ELSEIF"; }
-"else" { return "ELSE"; }
+"if" { return IF; }
+"else if" { return ELSEIF; }
+"else" { return ELSE; }
 
  /* loop token */
 "for" { return FOR; }

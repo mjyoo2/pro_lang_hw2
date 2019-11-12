@@ -10,7 +10,7 @@ extern int yyerror(const char *s);
 
 %}
 
-%union{parse_node *node, char *str_var; int int_var; double double_var}
+%union{parse_node *node; char *str_var; int int_var; double double_var}
 
 %type <int_var> file
 %type <node> code
@@ -163,7 +163,7 @@ extern int yyerror(const char *s);
 %%
 /* Rules */
 
-file: code { print_tree($1);
+file: code { print_tree($1, 0);
              $$ = 0;}
     ;
 
@@ -182,7 +182,7 @@ def_func : FUNCTION arg_ex block { parse_node *parent = make_node("def_func");
          | FUNCTION arg_ex ASSIGNMENT value { parse_node *parent = make_node("def_func");
                                               add_string(parent, "FUNCTION");
                                               add_child(parent, $2);
-                                              add_string(parent, "ASSIGNMENT")
+                                              add_string(parent, "ASSIGNMENT");
                                               $$ = add_child(parent, $4); }
          ;
 
@@ -195,9 +195,9 @@ arg_ex : OPEN arg_state CLOSE { parse_node *parent = make_node("arg_ex");
                       $$ = add_string(parent, "CLOSE"); }
        ;
 
-arg_state : var_ex { parent_node* parent = make_node("arg_ex");
+arg_state : var_ex { parse_node* parent = make_node("arg_ex");
                   $$ = add_child(parent, $1); }
-       | arg_ex COMMA var_ex { parent_node* parent = make_node("arg_ex");
+       | arg_ex COMMA var_ex { parse_node* parent = make_node("arg_ex");
                                add_child(parent, $1);
                                add_string(parent, "COMMA");
                                $$ = add_child(parent, $1); }
@@ -255,7 +255,7 @@ for_ex : FOR OPEN in_ex CLOSE block { parse_node* parent = make_node("for_ex");
                                       add_string(parent, "FOR");
                                       add_string(parent, "OPEN");
                                       add_child(parent, $3);
-                                      add_string(parnet, "CLOSE");
+                                      add_string(parent, "CLOSE");
                                       $$ = add_child(parent, $5); }
         ;
 
@@ -349,11 +349,11 @@ range: value range_op value { parse_node* parent = make_node("range"); }
 declear_ex: var_op var_ex ASSIGNMENT value { parse_node* parent = make_node("declear_ex");
                                              add_child(parent, $1);
                                              add_child(parent, $2);
-                                             add_string(parent, ASSIGNMNET);
+                                             add_string(parent, "ASSIGNMNET");
                                              $$ = add_child(parent, $4); }
 
            | var_op ID ASSIGNMENT value { parse_node* parent = make_node("declear_ex");
-                                          add_child(parent, $1)
+                                          add_child(parent, $1);
                                           add_string(parent, "ID");
                                           add_string(parent, "ASSIGNMNET");
                                           $$ = add_child(parent, $4);}

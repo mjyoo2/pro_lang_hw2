@@ -14,13 +14,13 @@ parse_node* make_dummy();
 parse_node* make_node(char* new_data);
 parse_node* add_string(parse_node* parent, char* child);
 parse_node* add_child(parse_node* parent, parse_node* child);
-void last_add(pasre_node *temp, parse_node *new_node);
+void last_add(parse_node *temp, parse_node *new_node);
+void print_tree(parse_node *parent, int layers);
 
 parse_node* make_dummy(){
-	  parse_node *new_node = (str_node *) malloc(sizeof(parse_node));
-	  strcpy(new_node->str, new_data);
-		new_node->str = "DUMMY";
-	  new_node->parent = NULL;
+	  parse_node *new_node = (parse_node *) malloc(sizeof(parse_node));
+	strcmp(new_node->str, "DUMMY");
+	new_node->parent = NULL;
     new_node->next = NULL;
     new_node->prev = NULL;
     new_node->child = NULL;
@@ -28,7 +28,7 @@ parse_node* make_dummy(){
 }
 
 parse_node* make_node(char* new_data){
-	  parse_node *new_node = (str_node *) malloc(sizeof(parse_node));
+	  parse_node *new_node = (parse_node *) malloc(sizeof(parse_node));
 	  strcpy(new_node->str, new_data);
 	  new_node->parent = NULL;
     new_node->next = NULL;
@@ -43,12 +43,12 @@ parse_node* add_string(parse_node* parent, char* child){
 }
 
 parse_node* add_child(parse_node* parent, parse_node* child){
-    last_add(parse_node->child, child);
+    last_add(parent->child, child);
     child->parent = parent;
     return parent;
 }
 
-void last_add(pasre_node *temp, parse_node *new_node){
+void last_add(parse_node *temp, parse_node *new_node){
     parse_node *last_node = temp;
     while (last_node->next != NULL){
       last_node = last_node->next;
@@ -58,18 +58,14 @@ void last_add(pasre_node *temp, parse_node *new_node){
     return;
 }
 
-void print_tree(pares_node *parent, int layers){
+void print_tree(parse_node *parent, int layers){
 	for (int i=0; i<layers; i++){
-		printf(' ');
+		printf(" ");
 	}
 	printf("-%s\n",parent->str);
-	if (parent->child->next != NULL){
-			parse_node *next_node = parent->child->next;
-	}
-	else{
-		return;
-	}
-	while(next != NULL){
+	parse_node *next_node = parent->child->next;
+
+	while(next_node != NULL){
 		print_tree(next_node, layers+1);
 		next_node = next_node->next;
 	}
