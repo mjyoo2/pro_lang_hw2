@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "expr.tab.h"
+#include "kotlin.tab.h"
 
 extern int yyerror(const char*);
 %}
@@ -97,7 +97,7 @@ SPACE [ \t\r]+
 "&&" { return AND; }
 "||" { return OR; }
 
-"step" { return STEP; }
+
 "," { return COMMA; }
 "{" { return CURLY_OPEN; }
 "}" { return CURLY_CLOSE; }

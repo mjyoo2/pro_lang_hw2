@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "parser_util.h"
+#include "parser_tree.h"
 
 extern int yylex(void);
 extern void yyterminate();
@@ -38,7 +38,7 @@ extern int yyerror(const char *s);
 %type <node> cond_state
 %type <node> in_ex
 %type <node> range
-%type <node> dclear_ex
+%type <node> declear_ex
 %type <node> assign_ex
 %type <node> var_ex
 
@@ -93,7 +93,7 @@ extern int yyerror(const char *s);
 %token <int_var> IS
 %token <int_var> NOTIS
 
-%token <int_var> PULS
+%token <int_var> PLUS
 %token <int_var> MINUS
 
 %token <int_var> MULT
@@ -140,7 +140,7 @@ extern int yyerror(const char *s);
 %token <int_var> AND
 %token <int_var> OR
 
-%token <int_var> STEP
+
 %token <int_var> COMMA
 
 %token <int_var> CURLY_OPEN
@@ -379,9 +379,7 @@ var_ex : ID COLON type {parse_node* parent = make_node("var_ex");
 
 enum_value: enum_type tuple { parse_node* parent = make_node("enum_value");
                               add_child(parent, $1);
-                              add_string(parent, "OPEN");
-                              add_child(parent, $3);
-                              $$ = add_string(parent, "CLOSE"); }
+							  $$ = add_child(parent, $2); }
           ;
 
 tuple: tuple COMMA value { parse_node* parent = make_node("tuple");
@@ -416,6 +414,7 @@ mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
 
 factor: ID { $$ = make_node("ID"); }
       | NUMBER { $$ = make_node("NUMBER"); }
+	  | member { $$ = $1; }
       | pre_uni_op factor { parse_node* parent = make_node("factor");
                             add_child(parent, $1);
                             $$ = add_child(parent, $2);}
@@ -437,6 +436,7 @@ member: ID INCL ID { parse_node* parent = make_node("member");
                            add_string(parent, "INCL");
                            add_string(parent, "ID");
                            $$ = add_child(parent, $4); }
+	  ;
 
 /* operations */
 
@@ -490,9 +490,11 @@ equl_op: EQEQ { $$ = make_node("EQEQ"); }
        | EQEQEQ { $$ = make_node("EQEQEQ"); }
        | EXCL_EQ { $$ = make_node("EXCL_EQ"); }
        | EXCL_EQEQ { $$ = make_node("EXCL_EQEQ"); }
+	   ;
 
 bool_op : AND { $$ = make_node("AND"); }
-          OR { $$ = make_node("OR"); }
+        | OR { $$ = make_node("OR"); }
+		;
 
 var_op : VAR { $$ = make_node("VAR"); }
        | VAL { $$ = make_node("VAL"); }
