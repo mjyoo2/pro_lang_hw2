@@ -67,14 +67,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "parser_tree.h"
 
 extern int yylex(void);
 extern void yyterminate();
 extern int yyerror(const char *s);
 
+typedef struct parse_tree{
+		char str[20];
+		struct parse_tree *child;
+    struct parse_tree *next;
+    struct parse_tree *prev;
+		struct parse_tree *parent;
+}parse_node;
 
-#line 78 "kotlin.tab.c" /* yacc.c:339  */
+parse_node* make_dummy();
+parse_node* make_node(char* new_data);
+parse_node* add_string(parse_node* parent, char* child);
+parse_node* add_child(parse_node* parent, parse_node* child);
+void last_add(parse_node *temp, parse_node *new_node);
+void print_tree(parse_node *parent, int layers);
+
+
+#line 92 "kotlin.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -98,7 +112,7 @@ extern int yyerror(const char *s);
 # define YY_YY_KOTLIN_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -181,10 +195,10 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 13 "kotlin.y" /* yacc.c:355  */
-parse_node *node; char *str_var; int int_var; double double_var
+#line 27 "kotlin.y" /* yacc.c:355  */
+struct parse_tree *node; char *str_var; int int_var; double double_var
 
-#line 188 "kotlin.tab.c" /* yacc.c:355  */
+#line 202 "kotlin.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -201,7 +215,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 205 "kotlin.tab.c" /* yacc.c:358  */
+#line 219 "kotlin.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -505,18 +519,18 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   166,   166,   170,   172,   178,   182,   189,   193,   198,
-     200,   208,   214,   216,   221,   223,   226,   233,   235,   237,
-     239,   241,   243,   245,   249,   254,   262,   264,   267,   270,
-     276,   282,   286,   293,   298,   304,   306,   312,   316,   320,
-     324,   328,   332,   338,   339,   345,   349,   355,   361,   366,
-     372,   380,   385,   389,   392,   396,   399,   403,   404,   407,
-     411,   412,   415,   416,   417,   418,   421,   424,   430,   434,
-     443,   444,   447,   448,   449,   450,   451,   454,   455,   458,
-     459,   460,   461,   462,   463,   466,   467,   468,   469,   472,
-     473,   476,   477,   480,   481,   484,   485,   486,   489,   490,
-     491,   492,   495,   496,   499,   500,   505,   506,   507,   508,
-     509,   510,   513,   514
+       0,   180,   180,   184,   186,   192,   196,   203,   207,   212,
+     214,   222,   228,   230,   235,   237,   240,   247,   249,   251,
+     253,   255,   257,   259,   263,   268,   276,   278,   281,   284,
+     290,   296,   300,   307,   312,   318,   320,   326,   330,   334,
+     338,   342,   346,   352,   353,   359,   363,   369,   375,   380,
+     386,   394,   399,   403,   406,   410,   413,   417,   418,   421,
+     425,   426,   429,   430,   431,   432,   435,   438,   444,   448,
+     457,   458,   461,   462,   463,   464,   465,   468,   469,   472,
+     473,   474,   475,   476,   477,   480,   481,   482,   483,   486,
+     487,   490,   491,   494,   495,   498,   499,   500,   503,   504,
+     505,   506,   509,   510,   513,   514,   519,   520,   521,   522,
+     523,   524,   527,   528
 };
 #endif
 
@@ -1431,819 +1445,819 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 166 "kotlin.y" /* yacc.c:1646  */
+#line 180 "kotlin.y" /* yacc.c:1646  */
     { print_tree((yyvsp[0].node), 0);
              (yyval.int_var) = 0;}
-#line 1438 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1452 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 170 "kotlin.y" /* yacc.c:1646  */
+#line 184 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("code");
                  (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1445 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1459 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 172 "kotlin.y" /* yacc.c:1646  */
+#line 186 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("code");
                       add_child(parent, (yyvsp[-1].node));
                       (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1453 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1467 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 178 "kotlin.y" /* yacc.c:1646  */
+#line 192 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("def_func");
                                    add_string(parent, "FUNCTION");
                                    add_child(parent, (yyvsp[-1].node));
                                    (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1462 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1476 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 182 "kotlin.y" /* yacc.c:1646  */
+#line 196 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("def_func");
                                               add_string(parent, "FUNCTION");
                                               add_child(parent, (yyvsp[-2].node));
                                               add_string(parent, "ASSIGNMENT");
                                               (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1472 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1486 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 189 "kotlin.y" /* yacc.c:1646  */
+#line 203 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("arg_ex");
                                 add_string(parent, "OPEN");
                                 add_child(parent, (yyvsp[-1].node));
                                 (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1481 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1495 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 193 "kotlin.y" /* yacc.c:1646  */
+#line 207 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("arg_ex");
                       add_string(parent, "OPEN");
                       (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1489 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1503 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 198 "kotlin.y" /* yacc.c:1646  */
+#line 212 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("arg_ex");
                   (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1496 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1510 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 200 "kotlin.y" /* yacc.c:1646  */
+#line 214 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("arg_ex");
                                add_child(parent, (yyvsp[-2].node));
                                add_string(parent, "COMMA");
                                (yyval.node) = add_child(parent, (yyvsp[-2].node)); }
-#line 1505 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1519 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 208 "kotlin.y" /* yacc.c:1646  */
+#line 222 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("block");
                                         add_string(parent, "CURLY_OPEN");
                                         add_child(parent, (yyvsp[-1].node));
                                         (yyval.node) = add_string(parent, "CURLY_CLOSE"); }
-#line 1514 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1528 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 214 "kotlin.y" /* yacc.c:1646  */
+#line 228 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("states");
                  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1521 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1535 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 216 "kotlin.y" /* yacc.c:1646  */
+#line 230 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("states");
                         add_child(parent, (yyvsp[-1].node));
                         (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1529 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1543 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 221 "kotlin.y" /* yacc.c:1646  */
+#line 235 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("state");
                      (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1536 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1550 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 223 "kotlin.y" /* yacc.c:1646  */
+#line 237 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("state");
                          add_child(parent, (yyvsp[-1].node));
                          (yyval.node) = add_string(parent, "EOL"); }
-#line 1544 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1558 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 226 "kotlin.y" /* yacc.c:1646  */
+#line 240 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("state");
                           add_child(parent, (yyvsp[-1].node));
                           (yyval.node) = add_string(parent, "SEMI"); }
-#line 1552 "kotlin.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 17:
-#line 233 "kotlin.y" /* yacc.c:1646  */
-    { parse_node *parent = make_node("expression");
-                        (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1559 "kotlin.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 18:
-#line 235 "kotlin.y" /* yacc.c:1646  */
-    { parse_node *parent = make_node("expression");
-                        (yyval.node) = add_child(parent, (yyvsp[0].node)); }
 #line 1566 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
-  case 19:
-#line 237 "kotlin.y" /* yacc.c:1646  */
+  case 17:
+#line 247 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
-                  (yyval.node) = add_string(parent, "EOF"); }
+                        (yyval.node) = add_child(parent, (yyvsp[0].node)); }
 #line 1573 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
-  case 20:
-#line 239 "kotlin.y" /* yacc.c:1646  */
+  case 18:
+#line 249 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
-                    (yyval.node) = add_child(parent, (yyvsp[0].node)); }
+                        (yyval.node) = add_child(parent, (yyvsp[0].node)); }
 #line 1580 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
-  case 21:
-#line 241 "kotlin.y" /* yacc.c:1646  */
+  case 19:
+#line 251 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
-                       (yyval.node) = add_child(parent, (yyvsp[0].node)); }
+                  (yyval.node) = add_string(parent, "EOF"); }
 #line 1587 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
-  case 22:
-#line 243 "kotlin.y" /* yacc.c:1646  */
+  case 20:
+#line 253 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
-                     (yyval.node) = add_child(parent, (yyvsp[0].node)); }
+                    (yyval.node) = add_child(parent, (yyvsp[0].node)); }
 #line 1594 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
-  case 23:
-#line 245 "kotlin.y" /* yacc.c:1646  */
+  case 21:
+#line 255 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("expression");
-                     (yyval.node) = add_child(parent, (yyvsp[0].node)); }
+                       (yyval.node) = add_child(parent, (yyvsp[0].node)); }
 #line 1601 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
+  case 22:
+#line 257 "kotlin.y" /* yacc.c:1646  */
+    { parse_node *parent = make_node("expression");
+                     (yyval.node) = add_child(parent, (yyvsp[0].node)); }
+#line 1608 "kotlin.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 23:
+#line 259 "kotlin.y" /* yacc.c:1646  */
+    { parse_node *parent = make_node("expression");
+                     (yyval.node) = add_child(parent, (yyvsp[0].node)); }
+#line 1615 "kotlin.tab.c" /* yacc.c:1646  */
+    break;
+
   case 24:
-#line 249 "kotlin.y" /* yacc.c:1646  */
+#line 263 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("function_ex");
                          add_string(parent, "ID");
                          (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1609 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1623 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 254 "kotlin.y" /* yacc.c:1646  */
+#line 268 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("for_ex");
                                       add_string(parent, "FOR");
                                       add_string(parent, "OPEN");
                                       add_child(parent, (yyvsp[-2].node));
                                       add_string(parent, "CLOSE");
                                       (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1620 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1634 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 262 "kotlin.y" /* yacc.c:1646  */
+#line 276 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_ex");
                   (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1627 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1641 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 264 "kotlin.y" /* yacc.c:1646  */
+#line 278 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_ex");
                              add_child(parent, (yyvsp[-1].node));
                              (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1635 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1649 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 267 "kotlin.y" /* yacc.c:1646  */
+#line 281 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_ex");
                                 add_child(parent, (yyvsp[-1].node));
                                 (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1643 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1657 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 270 "kotlin.y" /* yacc.c:1646  */
+#line 284 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_ex");
                                            add_child(parent, (yyvsp[-2].node));
                                            add_child(parent, (yyvsp[-1].node));
                                            (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1652 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1666 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 276 "kotlin.y" /* yacc.c:1646  */
+#line 290 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("if_state");
                              add_string(parent, "IF");
                              add_child(parent, (yyvsp[-1].node));
                              (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1661 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1675 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 282 "kotlin.y" /* yacc.c:1646  */
+#line 296 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("else_if_state");
                                       add_string(parent, "ELSEIF");
                                       add_child(parent, (yyvsp[-1].node));
                                       (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1670 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1684 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 286 "kotlin.y" /* yacc.c:1646  */
+#line 300 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("else_if_state");
                                                     add_child(parent, (yyvsp[-3].node));
                                                     add_string(parent, "ELSEIF");
                                                     add_child(parent, (yyvsp[-1].node));
                                                     (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1680 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1694 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 293 "kotlin.y" /* yacc.c:1646  */
+#line 307 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("else_state");
                          add_string(parent, "ELSE");
                          (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1688 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1702 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 298 "kotlin.y" /* yacc.c:1646  */
+#line 312 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("while_ex");
                                 add_string(parent, "WHILE");
                                 add_child(parent, (yyvsp[-1].node));
                                 (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1697 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1711 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 304 "kotlin.y" /* yacc.c:1646  */
+#line 318 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_ex");
                        (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1704 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1718 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 306 "kotlin.y" /* yacc.c:1646  */
+#line 320 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_ex");
                                        add_child(parent, (yyvsp[-2].node));
                                        add_child(parent, (yyvsp[-1].node));
                                        (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1713 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1727 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 312 "kotlin.y" /* yacc.c:1646  */
+#line 326 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_state");
                                  add_child(parent, (yyvsp[-2].node));
                                  add_child(parent, (yyvsp[-1].node));
                                  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1722 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1736 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 316 "kotlin.y" /* yacc.c:1646  */
+#line 330 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_state");
                                add_child(parent, (yyvsp[-2].node));
                                add_child(parent, (yyvsp[-1].node));
                                (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1731 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1745 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 320 "kotlin.y" /* yacc.c:1646  */
+#line 334 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_state");
                             add_child(parent, (yyvsp[-2].node));
                             add_child(parent, (yyvsp[-1].node));
                             (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1740 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1754 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 324 "kotlin.y" /* yacc.c:1646  */
+#line 338 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("cond_state");
                               add_string(parent, "OPEN");
                               add_child(parent, (yyvsp[-1].node));
                               (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1749 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1763 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 328 "kotlin.y" /* yacc.c:1646  */
+#line 342 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("in_ex");
                  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1756 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1770 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 332 "kotlin.y" /* yacc.c:1646  */
+#line 346 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("in_ex");
                             add_child(parent, (yyvsp[-2].node));
                             add_child(parent, (yyvsp[-1].node));
                             (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1765 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1779 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 338 "kotlin.y" /* yacc.c:1646  */
+#line 352 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("range"); }
-#line 1771 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1785 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 339 "kotlin.y" /* yacc.c:1646  */
+#line 353 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("range");
                                          add_child(parent, (yyvsp[-4].node));
                                          add_child(parent, (yyvsp[-3].node));
                                          add_child(parent, (yyvsp[-2].node));
                                          add_string(parent, "STEP");
                                          (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1782 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1796 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 345 "kotlin.y" /* yacc.c:1646  */
+#line 359 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("range");
                (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1789 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1803 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 349 "kotlin.y" /* yacc.c:1646  */
+#line 363 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("declear_ex");
                                              add_child(parent, (yyvsp[-3].node));
                                              add_child(parent, (yyvsp[-2].node));
                                              add_string(parent, "ASSIGNMNET");
                                              (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1799 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1813 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 355 "kotlin.y" /* yacc.c:1646  */
+#line 369 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("declear_ex");
                                           add_child(parent, (yyvsp[-3].node));
                                           add_string(parent, "ID");
                                           add_string(parent, "ASSIGNMNET");
                                           (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1809 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1823 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 361 "kotlin.y" /* yacc.c:1646  */
+#line 375 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("declear_ex");
                              add_child(parent, (yyvsp[-1].node));
                              (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1817 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1831 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 366 "kotlin.y" /* yacc.c:1646  */
+#line 380 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("assign_ex");
                             add_string(parent, "ID");
                             add_child(parent, (yyvsp[-1].node));
                             (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1826 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1840 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 372 "kotlin.y" /* yacc.c:1646  */
+#line 386 "kotlin.y" /* yacc.c:1646  */
     {parse_node* parent = make_node("var_ex");
                         add_string(parent, "ID");
                         add_string(parent, "COLON");
                         (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1835 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1849 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 380 "kotlin.y" /* yacc.c:1646  */
+#line 394 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("enum_value");
                               add_child(parent, (yyvsp[-1].node));
 							  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1843 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1857 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 385 "kotlin.y" /* yacc.c:1646  */
+#line 399 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("tuple");
                            add_child(parent, (yyvsp[-2].node));
                            add_string(parent, "COMMA");
                            (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1852 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1866 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 389 "kotlin.y" /* yacc.c:1646  */
+#line 403 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("tuple");
                     add_string(parent, "OPEN");
                     (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1860 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1874 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 392 "kotlin.y" /* yacc.c:1646  */
+#line 406 "kotlin.y" /* yacc.c:1646  */
     { parse_node *parent = make_node("tuple");
                           add_string(parent, "OPEN");
                           add_child(parent, (yyvsp[-1].node));
                           (yyval.node) = add_string(parent, "CLOSE");}
-#line 1869 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1883 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 396 "kotlin.y" /* yacc.c:1646  */
+#line 410 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = (yyvsp[0].node); }
-#line 1875 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1889 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 399 "kotlin.y" /* yacc.c:1646  */
+#line 413 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("value");
                                  add_child(parent, (yyvsp[-2].node));
                                  add_child(parent, (yyvsp[-1].node));
                                  (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1884 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1898 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 403 "kotlin.y" /* yacc.c:1646  */
+#line 417 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = (yyvsp[0].node); }
-#line 1890 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1904 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 404 "kotlin.y" /* yacc.c:1646  */
+#line 418 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = (yyvsp[0].node); }
-#line 1896 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1910 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 407 "kotlin.y" /* yacc.c:1646  */
+#line 421 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("mult_ex");
                                   add_child(parent, (yyvsp[-2].node));
                                   add_child(parent, (yyvsp[-1].node));
                                   (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1905 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1919 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 411 "kotlin.y" /* yacc.c:1646  */
+#line 425 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("STRING"); }
-#line 1911 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1925 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 412 "kotlin.y" /* yacc.c:1646  */
+#line 426 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = (yyvsp[0].node); }
-#line 1917 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1931 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 415 "kotlin.y" /* yacc.c:1646  */
+#line 429 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("ID"); }
-#line 1923 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1937 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 416 "kotlin.y" /* yacc.c:1646  */
+#line 430 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("NUMBER"); }
-#line 1929 "kotlin.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 64:
-#line 417 "kotlin.y" /* yacc.c:1646  */
-    { (yyval.node) = (yyvsp[0].node); }
-#line 1935 "kotlin.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 65:
-#line 418 "kotlin.y" /* yacc.c:1646  */
-    { parse_node* parent = make_node("factor");
-                            add_child(parent, (yyvsp[-1].node));
-                            (yyval.node) = add_child(parent, (yyvsp[0].node));}
 #line 1943 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
-  case 66:
-#line 421 "kotlin.y" /* yacc.c:1646  */
+  case 64:
+#line 431 "kotlin.y" /* yacc.c:1646  */
+    { (yyval.node) = (yyvsp[0].node); }
+#line 1949 "kotlin.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 65:
+#line 432 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("factor");
                             add_child(parent, (yyvsp[-1].node));
                             (yyval.node) = add_child(parent, (yyvsp[0].node));}
-#line 1951 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1957 "kotlin.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 66:
+#line 435 "kotlin.y" /* yacc.c:1646  */
+    { parse_node* parent = make_node("factor");
+                            add_child(parent, (yyvsp[-1].node));
+                            (yyval.node) = add_child(parent, (yyvsp[0].node));}
+#line 1965 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 424 "kotlin.y" /* yacc.c:1646  */
+#line 438 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("factor");
                            add_string(parent, "OPEN");
                            add_child(parent, (yyvsp[-1].node));
                            (yyval.node) = add_string(parent, "CLOSE"); }
-#line 1960 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1974 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 430 "kotlin.y" /* yacc.c:1646  */
+#line 444 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("member");
                      add_string(parent, "ID");
                      add_string(parent, "INCL");
                      (yyval.node) = add_string(parent, "ID"); }
-#line 1969 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1983 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 434 "kotlin.y" /* yacc.c:1646  */
+#line 448 "kotlin.y" /* yacc.c:1646  */
     { parse_node* parent = make_node("factor");
                            add_string(parent, "ID");
                            add_string(parent, "INCL");
                            add_string(parent, "ID");
                            (yyval.node) = add_child(parent, (yyvsp[0].node)); }
-#line 1979 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1993 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 443 "kotlin.y" /* yacc.c:1646  */
+#line 457 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("FROMTO"); }
-#line 1985 "kotlin.tab.c" /* yacc.c:1646  */
+#line 1999 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 444 "kotlin.y" /* yacc.c:1646  */
+#line 458 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DOWNTO"); }
-#line 1991 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2005 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 447 "kotlin.y" /* yacc.c:1646  */
+#line 461 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("INCR"); }
-#line 1997 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2011 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 448 "kotlin.y" /* yacc.c:1646  */
+#line 462 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DECR"); }
-#line 2003 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2017 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 449 "kotlin.y" /* yacc.c:1646  */
+#line 463 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EXCL"); }
-#line 2009 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2023 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 75:
-#line 450 "kotlin.y" /* yacc.c:1646  */
+#line 464 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("PLUS"); }
-#line 2015 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2029 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 451 "kotlin.y" /* yacc.c:1646  */
+#line 465 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MINUS"); }
-#line 2021 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2035 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 454 "kotlin.y" /* yacc.c:1646  */
+#line 468 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("INCR"); }
-#line 2027 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2041 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 455 "kotlin.y" /* yacc.c:1646  */
+#line 469 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DECR"); }
-#line 2033 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2047 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 458 "kotlin.y" /* yacc.c:1646  */
+#line 472 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("PLUS_ASSIGNMENT"); }
-#line 2039 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2053 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 459 "kotlin.y" /* yacc.c:1646  */
+#line 473 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MINUS_ASSIGNMENT"); }
-#line 2045 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2059 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 460 "kotlin.y" /* yacc.c:1646  */
+#line 474 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MULT_ASSIGNMENT"); }
-#line 2051 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2065 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 82:
-#line 461 "kotlin.y" /* yacc.c:1646  */
+#line 475 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DIV_ASSIGNMENT"); }
-#line 2057 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2071 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 462 "kotlin.y" /* yacc.c:1646  */
+#line 476 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MOD_ASSIGNMENT"); }
-#line 2063 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2077 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 463 "kotlin.y" /* yacc.c:1646  */
+#line 477 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("ASSIGNMENT"); }
-#line 2069 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2083 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 466 "kotlin.y" /* yacc.c:1646  */
+#line 480 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("LANGLE"); }
-#line 2075 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2089 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 467 "kotlin.y" /* yacc.c:1646  */
+#line 481 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("RANGLE"); }
-#line 2081 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2095 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 468 "kotlin.y" /* yacc.c:1646  */
+#line 482 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("LE"); }
-#line 2087 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2101 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 88:
-#line 469 "kotlin.y" /* yacc.c:1646  */
+#line 483 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("GE"); }
-#line 2093 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2107 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 89:
-#line 472 "kotlin.y" /* yacc.c:1646  */
+#line 486 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("IN"); }
-#line 2099 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2113 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 90:
-#line 473 "kotlin.y" /* yacc.c:1646  */
+#line 487 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("NOTIN"); }
-#line 2105 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2119 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 91:
-#line 476 "kotlin.y" /* yacc.c:1646  */
+#line 490 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("IS"); }
-#line 2111 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2125 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 92:
-#line 477 "kotlin.y" /* yacc.c:1646  */
+#line 491 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("NOTIS"); }
-#line 2117 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2131 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 93:
-#line 480 "kotlin.y" /* yacc.c:1646  */
+#line 494 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("PLUS"); }
-#line 2123 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2137 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 94:
-#line 481 "kotlin.y" /* yacc.c:1646  */
+#line 495 "kotlin.y" /* yacc.c:1646  */
     {(yyval.node) = make_node("MINUS"); }
-#line 2129 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2143 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 95:
-#line 484 "kotlin.y" /* yacc.c:1646  */
+#line 498 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MOD"); }
-#line 2135 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2149 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 96:
-#line 485 "kotlin.y" /* yacc.c:1646  */
+#line 499 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("MULT"); }
-#line 2141 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2155 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 97:
-#line 486 "kotlin.y" /* yacc.c:1646  */
+#line 500 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DIV"); }
-#line 2147 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2161 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 98:
-#line 489 "kotlin.y" /* yacc.c:1646  */
+#line 503 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EQEQ"); }
-#line 2153 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2167 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 99:
-#line 490 "kotlin.y" /* yacc.c:1646  */
+#line 504 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EQEQEQ"); }
-#line 2159 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2173 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 100:
-#line 491 "kotlin.y" /* yacc.c:1646  */
+#line 505 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EXCL_EQ"); }
-#line 2165 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2179 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 101:
-#line 492 "kotlin.y" /* yacc.c:1646  */
+#line 506 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("EXCL_EQEQ"); }
-#line 2171 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2185 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 102:
-#line 495 "kotlin.y" /* yacc.c:1646  */
+#line 509 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("AND"); }
-#line 2177 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2191 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 103:
-#line 496 "kotlin.y" /* yacc.c:1646  */
+#line 510 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("OR"); }
-#line 2183 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2197 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 104:
-#line 499 "kotlin.y" /* yacc.c:1646  */
+#line 513 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("VAR"); }
-#line 2189 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2203 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 105:
-#line 500 "kotlin.y" /* yacc.c:1646  */
+#line 514 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("VAL"); }
-#line 2195 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2209 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 106:
-#line 505 "kotlin.y" /* yacc.c:1646  */
+#line 519 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("BYTE"); }
-#line 2201 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2215 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 107:
-#line 506 "kotlin.y" /* yacc.c:1646  */
+#line 520 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("SHORT"); }
-#line 2207 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2221 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 108:
-#line 507 "kotlin.y" /* yacc.c:1646  */
+#line 521 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("INT"); }
-#line 2213 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2227 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 109:
-#line 508 "kotlin.y" /* yacc.c:1646  */
+#line 522 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("LONG"); }
-#line 2219 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2233 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 110:
-#line 509 "kotlin.y" /* yacc.c:1646  */
+#line 523 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("FLOAT"); }
-#line 2225 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2239 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 111:
-#line 510 "kotlin.y" /* yacc.c:1646  */
+#line 524 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("DOUBLE"); }
-#line 2231 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2245 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 513 "kotlin.y" /* yacc.c:1646  */
+#line 527 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("LISTOF"); }
-#line 2237 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2251 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
   case 113:
-#line 514 "kotlin.y" /* yacc.c:1646  */
+#line 528 "kotlin.y" /* yacc.c:1646  */
     { (yyval.node) = make_node("SETOF"); }
-#line 2243 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2257 "kotlin.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 2247 "kotlin.tab.c" /* yacc.c:1646  */
+#line 2261 "kotlin.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2471,10 +2485,66 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 517 "kotlin.y" /* yacc.c:1906  */
+#line 531 "kotlin.y" /* yacc.c:1906  */
 
 /* User code */
 int yyerror(const char *s)
 {
 	return printf("%s\n", s);
+}
+
+
+parse_node* make_dummy(){
+	  parse_node *new_node = (parse_node *) malloc(sizeof(parse_node));
+	strcmp(new_node->str, "DUMMY");
+	new_node->parent = NULL;
+    new_node->next = NULL;
+    new_node->prev = NULL;
+    new_node->child = NULL;
+	  return new_node;
+}
+
+parse_node* make_node(char* new_data){
+	  parse_node *new_node = (parse_node *) malloc(sizeof(parse_node));
+	  strcpy(new_node->str, new_data);
+	  new_node->parent = NULL;
+    new_node->next = NULL;
+    new_node->prev = NULL;
+    new_node->child = make_dummy();
+	  return new_node;
+}
+
+parse_node* add_string(parse_node* parent, char* child){
+    parse_node *child_node = make_node(child);
+    return add_child(parent, child_node);
+}
+
+parse_node* add_child(parse_node* parent, parse_node* child){
+    last_add(parent->child, child);
+    child->parent = parent;
+    return parent;
+}
+
+void last_add(parse_node *temp, parse_node *new_node){
+    parse_node *last_node = temp;
+    while (last_node->next != NULL){
+      last_node = last_node->next;
+    }
+    last_node -> next = new_node;
+    new_node -> prev = last_node;
+    return;
+}
+
+void print_tree(parse_node *parent, int layers){
+	for (int i=0; i<layers; i++){
+		printf(" ");
+	}
+	printf("-%s\n",parent->str);
+	parse_node *next_node = parent->child->next;
+
+	while(next_node != NULL){
+		print_tree(next_node, layers+1);
+		next_node = next_node->next;
+	}
+	return;
 }

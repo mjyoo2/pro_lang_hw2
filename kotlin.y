@@ -24,7 +24,7 @@ void print_tree(parse_node *parent, int layers);
 
 %}
 
-%union{parse_node *node; char *str_var; int int_var; double double_var}
+%union{struct parse_tree *node; char *str_var; int int_var; double double_var}
 
 %type <int_var> file
 %type <node> code
