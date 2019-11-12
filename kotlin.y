@@ -10,7 +10,63 @@ extern int yyerror(const char *s);
 
 %}
 
-%union{char *str_var; int int_var; double double_var}
+%union{parse_node *node, char *str_var; int int_var; double double_var}
+
+%type <int_var> file
+%type <node> code
+
+/* component of code */
+%type <node> def_func
+%type <node> arg_ex
+%type <node> arg_state
+
+/* block */
+%type <node> block
+%type <node> states
+%type <node> state
+
+/* expression */
+%type <node> expression
+%type <node> function_ex
+%type <node> for_ex
+%type <node> if_ex
+%type <node> if_state
+%type <node> else_if_state
+%type <node> else_state
+%type <node> while_ex
+%type <node> cond_ex
+%type <node> cond_state
+%type <node> in_ex
+%type <node> range
+%type <node> dclear_ex
+%type <node> assign_ex
+%type <node> var_ex
+
+/* values */
+%type <node> enum_value
+%type <node> tuple
+%type <node> value
+%type <node> mult_ex
+%type <node> factor
+%type <node> member
+
+/* operations */
+%type <node> range_op
+%type <node> pre_uni_op
+%type <node> post_uni_op
+%type <node> ass_op
+%type <node> com_op
+%type <node> in_op
+%type <node> is_op
+%type <node> add_op
+%type <node> mult_op
+%type <node> equl_op
+%type <node> bool_op
+%type <node> var_op
+
+/* enum_type */
+%type <node> type
+%type <node> enum_type
 
 %token <double_var> NUMBER
 %token <str_var> ID
@@ -107,7 +163,8 @@ extern int yyerror(const char *s);
 %%
 /* Rules */
 
-file: code { print_tree($1);}
+file: code { print_tree($1);
+             $$ = 0;}
     ;
 
 code: def_func { parse_node* parent = make_node("code");
