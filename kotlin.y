@@ -107,8 +107,15 @@ extern int yyerror(const char *s);
 %%
 /* Rules */
 
-code: def_func {}
-    | code def_func {}
+file: code { print_tree($1);}
+    ;
+
+code: def_func { parse_node* parent = make_node("code");
+                 $$ = add_child(parent, $1);}
+    | code def_func { parse_node* parent = make_node("code");
+                      add_child(parent, $1);
+                      $$ = add_child(parent, $2);}
+    ;
 
 /* component of code */
 def_func : FUNCTION arg_ex block { parse_node *parent = make_node("def_func");
