@@ -16,33 +16,101 @@ extern int yyerror(const char *s);
 %token <str_var> ID
 %token <str_var> STRING
 
-%left FUNCTION
-%left DOWN STEP WHEN RET
-%left UNIT BYTE SHORT INT LONG FLOAT DOUBLE
-%left IN NOTIN
-%left IS NOTIS
-%left PLUS MINUS
-%left MULT DIV MOD
-%left LANGLE RANGLE LE GE
-%left EQEQ EQEQEQ EXCL_EQ EXCL_EQEQ
-%left ASSIGNMENT PLUS_ASSIGNMENT MINUS_ASSIGNMENT DIV_ASSIGNMENT MULT_ASSIGNMENT MOD_ASSIGNMENT
-%left INCR DECR EXCL
-%left LISTOF SETOF
-%left VAR VAL
-%left FROMTO DOWNTO
-%left IF ELSEIF ELSE
-%left FOR WHILE
-%left AND OR
-%left STEP COMMA
-%left CURLY_OPEN CURLY_CLOSE
-%left NULLABLE COLON INCL
-%left OPEN CLOSE
-%left EOL SEMI
+%token <int_var> FUNCTION
 
+%token <int_var> DOWN
+%token <int_var> STEP
+%token <int_var> WHEN
+%token <int_var> RET
+
+%token <int_var> UNIT
+%token <int_var> BYTE
+%token <int_var> SHORT
+%token <int_var> INT
+%token <int_var> LONG
+%token <int_var> FLOAT
+%token <int_var> DOUBLE
+
+%token <int_var> IN
+%token <int_var> NOTIN
+
+%token <int_var> IS
+%token <int_var> NOTIS
+
+%token <int_var> PULS
+%token <int_var> MINUS
+
+%token <int_var> MULT
+%token <int_var> DIV
+%token <int_var> MOD
+
+%token <int_var> LANGLE
+%token <int_var> RANGLE
+%token <int_var> LE
+%token <int_var> GE
+
+%token <int_var> EQEQ
+%token <int_var> EQEQEQ
+%token <int_var> EXCL_EQ
+%token <int_var> EXCL_EQEQ
+
+%token <int_var> ASSIGNMENT
+%token <int_var> PLUS_ASSIGNMENT
+%token <int_var> MINUS_ASSIGNMENT
+%token <int_var> DIV_ASSIGNMENT
+%token <int_var> MULT_ASSIGNMENT
+%token <int_var> MOD_ASSIGNMENT
+
+%token <int_var> INCR
+%token <int_var> DECR
+%token <int_var> EXCL
+
+%token <int_var> LISTOF
+%token <int_var> SETOF
+
+%token <int_var> VAR
+%token <int_var> VAL
+
+%token <int_var> FROMTO
+%token <int_var> DOWNTO
+
+%token <int_var> IF
+%token <int_var> ELSEIF
+%token <int_var> ELSE
+
+%token <int_var> FOR
+%token <int_var> WHILE
+
+%token <int_var> AND
+%token <int_var> OR
+
+%token <int_var> STEP
+%token <int_var> COMMA
+
+%token <int_var> CURLY_OPEN
+%token <int_var> CURLY_CLOSE
+
+%token <int_var> NULLABLE
+%token <int_var> COLON
+%token <int_var> INCL
+
+%token <int_var> OPEN
+%token <int_var> CLOSE
+
+%token <int_var> EOL
+%token <int_var> SEMI
+
+// https://kotlinlang.org/docs/reference/basic-syntax.html
+// https://github.com/Kotlin/kotlin-spec/blob/master/grammar/src/main/antlr/KotlinLexer.g4
+// https://github.com/Kotlin/kotlin-spec/blob/master/grammar/src/main/antlr/KotlinParser.g4
 
 %%
 /* Rules */
 
+code: def_func {}
+    | code def_func {}
+
+/* component of code */
 def_func : FUNCTION arg_ex block { parse_node *parent = make_node("def_func");
                                    add_string(parent, "FUNCTION");
                                    add_child(parent, $2);
@@ -110,7 +178,14 @@ expression: assign_ex { parse_node *parent = make_node("expression");
                        $$ = add_child(parent, $1); }
           | for_ex { parse_node *parent = make_node("expression");
                      $$ = add_child(parent, $1); }
+          | function_ex { parse_node *parent = make_node("expression");
+                     $$ = add_child(parent, $1); }
           ;
+
+function_ex : ID tuple { parse_node *parent = make_node("function_ex");
+                         add_string(parent, "ID");
+                         $$ = add_child(parent, $2);}
+            ;
 
 for_ex : FOR OPEN in_ex CLOSE block { parse_node* parent = make_node("for_ex");
                                       add_string(parent, "FOR");
