@@ -181,6 +181,7 @@ void print_tree(parse_node *parent, int layers);
 
 file: code { print_tree($1, 0);
              $$ = 0;}
+    | EOL {/* ignore */}
     ;
 
 code: def_func { parse_node* parent = make_node("code");
