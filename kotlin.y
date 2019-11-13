@@ -34,6 +34,7 @@ void print_tree(parse_node *parent, int layers);
 
 /* component of code */
 %type <node> def_func
+%type <node> arg_block
 %type <node> arg_ex
 %type <node> arg_state
 
@@ -45,6 +46,7 @@ void print_tree(parse_node *parent, int layers);
 /* expression */
 %type <node> expression
 %type <node> function_ex
+%type <node> return_ex
 %type <node> for_ex
 %type <node> if_ex
 %type <node> if_state
@@ -58,6 +60,7 @@ void print_tree(parse_node *parent, int layers);
 %type <node> declear_ex
 %type <node> assign_ex
 %type <node> var_ex
+%type <node> type_ex
 
 /* values */
 %type <node> enum_value
@@ -196,18 +199,25 @@ code: def_func { parse_node* parent = make_node("code");
     ;
 
 /* component of code */
-def_func : FUNCTION ID arg_ex block { parse_node *parent = make_node("def_func");
+def_func : FUNCTION ID arg_block block { parse_node *parent = make_node("def_func");
                                    add_string(parent, "FUNCTION");
 								   add_string(parent, "ID");
                                    add_child(parent, $3);
                                    $$ = add_child(parent, $4); }
-         | FUNCTION ID arg_ex ASSIGNMENT value { parse_node *parent = make_node("def_func");
+         | FUNCTION ID arg_block ASSIGNMENT value { parse_node *parent = make_node("def_func");
                                               add_string(parent, "FUNCTION");
 											  add_string(parent, "ID");
                                               add_child(parent, $3);
                                               add_string(parent, "ASSIGNMENT");
                                               $$ = add_child(parent, $5); }
          ;
+
+arg_block : arg_ex { parse_node *parent = make_node("arg_block");
+					 $$ = add_child(parent, $1);}
+		  | arg_ex type_ex { parse_node *parent = make_node("arg_block");
+		  					 add_child(parent, $1);
+							 $$ = add_child(parent, $2); }
+		 ;
 
 arg_ex : OPEN arg_state CLOSE { parse_node *parent = make_node("arg_ex");
                                 add_string(parent, "OPEN");
@@ -223,7 +233,7 @@ arg_state : var_ex { parse_node* parent = make_node("arg_ex");
        | var_ex COMMA arg_state { parse_node* parent = make_node("arg_ex");
                                add_child(parent, $1);
                                add_string(parent, "COMMA");
-                               $$ = add_child(parent, $1); }
+                               $$ = add_child(parent, $3); }
        ;
 
 /* block */
@@ -267,12 +277,19 @@ expression: assign_ex { parse_node *parent = make_node("expression");
                      $$ = add_child(parent, $1); }
           | function_ex { parse_node *parent = make_node("expression");
                      $$ = add_child(parent, $1); }
+		  | return_ex { parse_node *parent = make_node("expression");
+		  				$$ = add_child(parent, $1); }
           ;
 
 function_ex : ID tuple { parse_node *parent = make_node("function_ex");
                          add_string(parent, "ID");
                          $$ = add_child(parent, $2);}
             ;
+
+return_ex : RET value { parse_node *parent = make_node("return_ex");
+						add_string(parent, "RET");
+						$$ = add_child(parent, $2); }
+		  ;
 
 for_ex : FOR OPEN in_ex CLOSE block { parse_node* parent = make_node("for_ex");
                                       add_string(parent, "FOR");
@@ -392,12 +409,15 @@ assign_ex: ID ass_op value{ parse_node* parent = make_node("assign_ex");
                             $$ = add_child(parent, $3);}
           ;
 
-var_ex : ID COLON type {parse_node* parent = make_node("var_ex");
-                        add_string(parent, "ID");
-                        add_string(parent, "COLON");
-                        $$ = add_child(parent, $3);}
+var_ex : ID type_ex { parse_node* parent = make_node("var_ex");
+                      add_string(parent, "ID");
+                      $$ = add_child(parent, $2);}
        ;
 
+type_ex : COLON type { parse_node* parent = make_node("type_ex");
+					   add_string(parent, "COLON");
+					   $$ = add_child(parent, $2); }
+		;
 /* values */
 
 enum_value: enum_type tuple { parse_node* parent = make_node("enum_value");

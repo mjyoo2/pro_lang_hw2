@@ -1152,7 +1152,7 @@ case 63:
 YY_RULE_SETUP
 #line 119 "kotlin.l"
 { yylval.str_var = yytext;
-		printf("%s", yytext);
+		printf("%s\n", yytext);
 		return ID;}
 	YY_BREAK
 case 64:
