@@ -204,19 +204,27 @@ code: def_func { parse_node* parent = make_node("code");
 
 /* component of code */
 <<<<<<< HEAD
+<<<<<<< HEAD
 def_func : FUNCTION ID arg_ex block { parse_node *parent = make_node("def_func");
 =======
 def_func : FUNCTION ID arg_block block { parse_node *parent = make_node("def_func");
 >>>>>>> 2250e1166ff07b8d4b2c1ccbaae9fcee148745d1
+=======
+def_func : FUNCTION ID arg_block block { parse_node *parent = make_node("def_func");
+>>>>>>> c3fff5023e15e770c6c8029a5233a29a495c4cb8
                                    add_string(parent, "FUNCTION");
 								   add_string(parent, "ID");
                                    add_child(parent, $3);
                                    $$ = add_child(parent, $4); }
 <<<<<<< HEAD
+<<<<<<< HEAD
          | FUNCTION ID arg_ex ASSIGNMENT value { parse_node *parent = make_node("def_func");
 =======
          | FUNCTION ID arg_block ASSIGNMENT value { parse_node *parent = make_node("def_func");
 >>>>>>> 2250e1166ff07b8d4b2c1ccbaae9fcee148745d1
+=======
+         | FUNCTION ID arg_block ASSIGNMENT value { parse_node *parent = make_node("def_func");
+>>>>>>> c3fff5023e15e770c6c8029a5233a29a495c4cb8
                                               add_string(parent, "FUNCTION");
 											  add_string(parent, "ID");
                                               add_child(parent, $3);
