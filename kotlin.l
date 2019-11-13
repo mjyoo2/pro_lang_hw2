@@ -10,7 +10,7 @@ extern int yyerror(const char*);
 STRING \"[^\0]*\"
 INTNUMBER [0-9]+
 NUMBER [0-9]+[.]?[0-9]*
-ID [a-zA-Z][a-zA-Z0-9|_]*
+ID [a-zA-Z][a-zA-Z0-9]*
 SPACE [ \t\r]+
 
 %%
@@ -112,13 +112,13 @@ SPACE [ \t\r]+
 "\n"	{ return EOL; }
 ";" { return SEMI; }
 
-
  /* factor */
 {STRING} { yylval.str_var = yytext;
 					return STRING;}
 
-{ID}		{ yylval.str_var = yytext;
-					return ID;}
+{ID} { yylval.str_var = yytext;
+		printf("%s\n", yytext);
+		return ID;}
 
 {NUMBER} { yylval.double_var = atof(yytext);
 					return NUMBER; }

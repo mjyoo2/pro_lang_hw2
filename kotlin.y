@@ -29,6 +29,7 @@ void print_tree(parse_node *parent, int layers);
 %union{struct parse_tree *node; char *str_var; int int_var; double double_var;}
 
 %type <int_var> file
+%type <node> codes
 %type <node> code
 
 /* component of code */
@@ -83,10 +84,6 @@ void print_tree(parse_node *parent, int layers);
 /* enum_type */
 %type <node> type
 %type <node> enum_type
-
-%token <double_var> NUMBER
-%token <str_var> ID
-%token <str_var> STRING
 
 %token <int_var> FUNCTION
 
@@ -171,6 +168,9 @@ void print_tree(parse_node *parent, int layers);
 
 %token <int_var> EOL
 %token <int_var> SEMI
+%token <double_var> NUMBER
+%token <str_var> ID
+%token <str_var> STRING
 
 // https://kotlinlang.org/docs/reference/basic-syntax.html
 // https://github.com/Kotlin/kotlin-spec/blob/master/grammar/src/main/antlr/KotlinLexer.g4
@@ -179,16 +179,20 @@ void print_tree(parse_node *parent, int layers);
 %%
 /* Rules */
 
-file: code { print_tree($1, 0);
+file: codes { print_tree($1, 0);
              $$ = 0;}
-    | EOL {/* ignore */}
     ;
 
+codes: code codes { parse_node* parent = make_node("codes");
+					add_child(parent, $1);
+					$$ = add_child(parent, $2); }
+	 | code { $$ = $1; }
+	 ;
+
 code: def_func { parse_node* parent = make_node("code");
-                 $$ = add_child(parent, $1);}
-    | code def_func { parse_node* parent = make_node("code");
-                      add_child(parent, $1);
-                      $$ = add_child(parent, $2);}
+                 $$ = add_child(parent, $1); }
+	| EOL { parse_node* parent = make_node("code");
+			$$ = add_string(parent, "EOL"); }
     ;
 
 /* component of code */
@@ -216,7 +220,7 @@ arg_ex : OPEN arg_state CLOSE { parse_node *parent = make_node("arg_ex");
 
 arg_state : var_ex { parse_node* parent = make_node("arg_ex");
                   $$ = add_child(parent, $1); }
-       | arg_ex COMMA var_ex { parse_node* parent = make_node("arg_ex");
+       | var_ex COMMA arg_state { parse_node* parent = make_node("arg_ex");
                                add_child(parent, $1);
                                add_string(parent, "COMMA");
                                $$ = add_child(parent, $1); }
@@ -232,7 +236,7 @@ block : CURLY_OPEN states CURLY_CLOSE { parse_node *parent = make_node("block");
 
 states : state { parse_node *parent = make_node("states");
                  $$ = add_child(parent, $1); }
-       | states state { parse_node *parent = make_node("states");
+       | state states { parse_node *parent = make_node("states");
                         add_child(parent, $1);
                         $$ = add_child(parent, $2); }
        ;
@@ -302,7 +306,7 @@ else_if_state: ELSEIF cond_ex block { parse_node* parent = make_node("else_if_st
                                       add_string(parent, "ELSEIF");
                                       add_child(parent, $2);
                                       $$ = add_child(parent, $3); }
-             | else_if_state ELSEIF cond_ex block { parse_node* parent = make_node("else_if_state");
+             | cond_ex ELSEIF else_if_state block { parse_node* parent = make_node("else_if_state");
                                                     add_child(parent, $1);
                                                     add_string(parent, "ELSEIF");
                                                     add_child(parent, $3);
@@ -322,7 +326,7 @@ while_ex: WHILE cond_ex block { parse_node* parent = make_node("while_ex");
 
 cond_ex : cond_state { parse_node* parent = make_node("cond_ex");
                        $$ = add_child(parent, $1);}
-        | cond_ex bool_op cond_state { parse_node* parent = make_node("cond_ex");
+        | cond_state bool_op cond_ex { parse_node* parent = make_node("cond_ex");
                                        add_child(parent, $1);
                                        add_child(parent, $2);
                                        $$ = add_child(parent, $3);}
@@ -401,7 +405,7 @@ enum_value: enum_type tuple { parse_node* parent = make_node("enum_value");
 							  $$ = add_child(parent, $2); }
           ;
 
-tuple: tuple COMMA value { parse_node* parent = make_node("tuple");
+tuple: value COMMA tuple { parse_node* parent = make_node("tuple");
                            add_child(parent, $1);
                            add_string(parent, "COMMA");
                            $$ = add_child(parent, $3);}
