@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef YYDEBUG
+  yydebug = 1;
+#endif
+
 extern int yylex(void);
 extern void yyterminate();
 extern int yyerror(const char *s);
