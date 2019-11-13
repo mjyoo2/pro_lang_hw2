@@ -1,0 +1,11 @@
+fun main(){
+	println("Hello world")
+}
+
+<<<<<<< HEAD
+fun sum(a :Int, b: Int): Int{
+=======
+fun sum(a :Int, b:Int): Int{
+>>>>>>> 2250e1166ff07b8d4b2c1ccbaae9fcee148745d1
+	return a+b
+}
