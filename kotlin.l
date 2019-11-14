@@ -7,16 +7,16 @@
 extern int yyerror(const char*);
 %}
 
-STRING \"[^\0]*\"
-INTNUMBER [0-9]+
+STRING \".*\"
+range [0-9]+\.\.
 NUMBER [0-9]+[.]?[0-9]*
-ID [a-zA-Z][a-zA-Z0-9]*
+ID [a-zA-Z][a-zA-Z0-9|\_]*
 SPACE [ \t\r]+
-COMMENT ([\/][\*].*[\*][\/]|\/{2}[^\n]*)
+COMMENT (\/[\*].*[\*]]\/|\/{2}[^\n]*)
 
 %%
 
-{COMMENT} {/* ignore */}
+
 
 "package" { return PACKAGE; }
 "import" { return IMPORT; }
@@ -47,6 +47,8 @@ COMMENT ([\/][\*].*[\*][\/]|\/{2}[^\n]*)
  /* is operation */
 "is" { return IS; }
 "!is" { return NOTIS; }
+
+{COMMENT} {/* ignore */}
 
  /* add operation */
 "+"	{ return PLUS; }
@@ -122,6 +124,7 @@ COMMENT ([\/][\*].*[\*][\/]|\/{2}[^\n]*)
 ";" { return SEMI; }
 
  /* factor */
+{range} { return RANGE; }
 {STRING} { yylval.str_var = yytext;
 					return STRING;}
 

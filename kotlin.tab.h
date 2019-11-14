@@ -115,9 +115,10 @@ extern int yydebug;
     NUL = 325,
     EOL = 326,
     SEMI = 327,
-    NUMBER = 328,
-    ID = 329,
-    STRING = 330
+    RANGE = 328,
+    NUMBER = 329,
+    ID = 330,
+    STRING = 331
   };
 #endif
 
@@ -129,7 +130,7 @@ union YYSTYPE
 #line 29 "kotlin.y" /* yacc.c:1909  */
 struct parse_tree *node; char *str_var; int int_var; double double_var;
 
-#line 133 "kotlin.tab.h" /* yacc.c:1909  */
+#line 134 "kotlin.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
