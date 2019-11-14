@@ -3,10 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef YYDEBUG
-  yydebug = 1;
-#endif
-
 extern int yylex(void);
 extern void yyterminate();
 extern int yyerror(const char *s);
@@ -38,7 +34,6 @@ void print_tree(parse_node *parent, int layers);
 
 /* component of code */
 %type <node> def_func
-%type <node> arg_block
 %type <node> arg_ex
 %type <node> arg_state
 
@@ -49,30 +44,38 @@ void print_tree(parse_node *parent, int layers);
 
 /* expression */
 %type <node> expression
+%type <node> package_ex
+%type <node> import_ex
 %type <node> function_ex
-%type <node> return_ex
 %type <node> for_ex
 %type <node> if_ex
 %type <node> if_state
 %type <node> else_if_state
 %type <node> else_state
 %type <node> while_ex
+%type <node> when_ex
+%type <node> when_block
+%type <node> when_states
+%type <node> when_state
+%type <node> when_cond_ex
 %type <node> cond_ex
 %type <node> cond_state
 %type <node> in_ex
-%type <node> range
 %type <node> declear_ex
 %type <node> assign_ex
 %type <node> var_ex
-%type <node> type_ex
 
 /* values */
+%type <node> iterable_value
+%type <node> range
 %type <node> enum_value
 %type <node> tuple
 %type <node> value
 %type <node> mult_ex
 %type <node> factor
+%type <node> object_ex
 %type <node> member
+%type <node> new_line
 
 /* operations */
 %type <node> range_op
@@ -89,9 +92,14 @@ void print_tree(parse_node *parent, int layers);
 %type <node> var_op
 
 /* enum_type */
+%type <node> type_ex
 %type <node> type
 %type <node> enum_type
 
+%token <int_var> PACKAGE
+%token <int_var> IMPORT
+%token <int_var> FORALL
+%token <int_var> POINT
 %token <int_var> FUNCTION
 
 %token <int_var> DOWN
@@ -173,10 +181,13 @@ void print_tree(parse_node *parent, int layers);
 %token <int_var> OPEN
 %token <int_var> CLOSE
 
+%token <int_var> NULL
 %token <int_var> EOL
 %token <int_var> SEMI
+
 %token <double_var> NUMBER
 %token <str_var> ID
+%token <str_var> COMMENT
 %token <str_var> STRING
 
 // https://kotlinlang.org/docs/reference/basic-syntax.html
@@ -190,38 +201,30 @@ file: codes { print_tree($1, 0);
              $$ = 0;}
     ;
 
-codes: code codes { parse_node* parent = make_node("codes");
-					add_child(parent, $1);
-					$$ = add_child(parent, $2); }
-	 | code { $$ = $1; }
-	 ;
+codes: code codes { $$ = add_child($1, $2); }
+	 		| code { parse_node* parent = make_node("codes");
+							 $$ = add_child(parent, $1); }
+	 	  ;
 
 code: def_func { parse_node* parent = make_node("code");
                  $$ = add_child(parent, $1); }
-	| EOL { parse_node* parent = make_node("code");
-			$$ = add_string(parent, "EOL"); }
+   	| new_line {$$ = make_node("new_line"); }
     ;
 
 /* component of code */
-def_func : FUNCTION ID arg_block block { parse_node *parent = make_node("def_func");
-                                   add_string(parent, "FUNCTION");
-								   add_string(parent, "ID");
-                                   add_child(parent, $3);
-                                   $$ = add_child(parent, $4); }
-         | FUNCTION ID arg_block ASSIGNMENT value { parse_node *parent = make_node("def_func");
+
+def_func : FUNCTION ID arg_ex block { parse_node *parent = make_node("def_func");
+		                                  add_string(parent, "FUNCTION");
+					   						 		 	 				add_string(parent, "ID");
+		                                  add_child(parent, $3);
+		                                  $$ = add_child(parent, $4); }
+         | FUNCTION ID arg_ex ASSIGNMENT value { parse_node *parent = make_node("def_func");
                                               add_string(parent, "FUNCTION");
-											  add_string(parent, "ID");
+											  											add_string(parent, "ID");
                                               add_child(parent, $3);
                                               add_string(parent, "ASSIGNMENT");
                                               $$ = add_child(parent, $5); }
          ;
-
-arg_block : arg_ex { parse_node *parent = make_node("arg_block");
-					 $$ = add_child(parent, $1);}
-		  | arg_ex type_ex { parse_node *parent = make_node("arg_block");
-		  					 add_child(parent, $1);
-							 $$ = add_child(parent, $2); }
-		 ;
 
 arg_ex : OPEN arg_state CLOSE { parse_node *parent = make_node("arg_ex");
                                 add_string(parent, "OPEN");
@@ -237,7 +240,7 @@ arg_state : var_ex { parse_node* parent = make_node("arg_ex");
        | var_ex COMMA arg_state { parse_node* parent = make_node("arg_ex");
                                add_child(parent, $1);
                                add_string(parent, "COMMA");
-                               $$ = add_child(parent, $3); }
+                               $$ = add_child(parent, $1); }
        ;
 
 /* block */
@@ -248,18 +251,13 @@ block : CURLY_OPEN states CURLY_CLOSE { parse_node *parent = make_node("block");
                                         $$ = add_string(parent, "CURLY_CLOSE"); }
       ;
 
-states : state { parse_node *parent = make_node("states");
-                 $$ = add_child(parent, $1); }
-       | state states { parse_node *parent = make_node("states");
-                        add_child(parent, $1);
-                        $$ = add_child(parent, $2); }
+states : expression { parse_node *parent = make_node("states");
+                     $$ = add_child(parent, $1); }
+       | state states {$$ = add_child($2, $1); }
        ;
 
-state : expression { parse_node *parent = make_node("state");
-                     $$ = add_child(parent, $1); }
-      | expression EOL { parse_node *parent = make_node("state");
-                         add_child(parent, $1);
-                         $$ = add_string(parent, "EOL"); }
+state : expression new_line { parse_node *parent = make_node("state");
+                              $$ = add_child(parent, $1);}
       | expression SEMI { parse_node *parent = make_node("state");
                           add_child(parent, $1);
                           $$ = add_string(parent, "SEMI"); }
@@ -271,8 +269,7 @@ expression: assign_ex { parse_node *parent = make_node("expression");
                         $$ = add_child(parent, $1); }
           | declear_ex { parse_node *parent = make_node("expression");
                         $$ = add_child(parent, $1); }
-          | EOL { parse_node *parent = make_node("expression");
-                  $$ = add_string(parent, "EOF"); }
+          | new_line {$$ = make_node("new_line");}
           | if_ex { parse_node *parent = make_node("expression");
                     $$ = add_child(parent, $1); }
           | while_ex { parse_node *parent = make_node("expression");
@@ -281,19 +278,34 @@ expression: assign_ex { parse_node *parent = make_node("expression");
                      $$ = add_child(parent, $1); }
           | function_ex { parse_node *parent = make_node("expression");
                      $$ = add_child(parent, $1); }
-		  | return_ex { parse_node *parent = make_node("expression");
-		  				$$ = add_child(parent, $1); }
+				  | package_ex { parse_node *parent = make_node("expression");
+                     $$ = add_child(parent, $1); }
+					| import_ex { parse_node *parent = make_node("expression");
+	                   $$ = add_child(parent, $1); }
+				  | when_ex { parse_node *parent = make_node("expression");
+	                    $$ = add_child(parent, $1); }
+					| COMMENT { $$ = make_node("COMMENT"); }
           ;
+
+package_ex : PACKAGE object_ex { parse_node *parent = make_node("package_ex");
+																 add_string(parent, "PACKAGE");
+																 $$ = add_child(parent, $2); }
+					 ;
+
+import_ex : IMPORT object_ex { parse_node *parent = make_node("import_ex");
+																 add_string(parent, "IMPORT");
+																 $$ = add_child(parent, $2); }
+					| IMPORT object_ex INCL FOLALL { parse_node *parent = make_node("import_ex");
+																					 add_string(parent, "IMPORT");
+																				 	 add_child(parent, $2);
+																				   add_string(parent, "INCL");
+																				 	 add_string(parent, "FORALL"); }
+					;
 
 function_ex : ID tuple { parse_node *parent = make_node("function_ex");
                          add_string(parent, "ID");
                          $$ = add_child(parent, $2);}
             ;
-
-return_ex : RET value { parse_node *parent = make_node("return_ex");
-						add_string(parent, "RET");
-						$$ = add_child(parent, $2); }
-		  ;
 
 for_ex : FOR OPEN in_ex CLOSE block { parse_node* parent = make_node("for_ex");
                                       add_string(parent, "FOR");
@@ -302,6 +314,46 @@ for_ex : FOR OPEN in_ex CLOSE block { parse_node* parent = make_node("for_ex");
                                       add_string(parent, "CLOSE");
                                       $$ = add_child(parent, $5); }
         ;
+when_ex: WHEN OPEN object CLOSE when_block { parse_node *parent = make_node("when_ex");
+																						 add_string(parent, "WHEN");
+																					   add_string(parent, "OPEN");
+																					   add_child(parent, $3);
+																					   add_string(parent, "CLOSE");
+																					   $$ = add_child(parent, $5);}
+			 ;
+
+when_block : CURLY_OPEN when_states CURLY_CLOSE { parse_node *parent = make_node("when_block");
+                                        add_string(parent, "CURLY_OPEN");
+                                        add_child(parent, $2);
+                                        $$ = add_string(parent, "CURLY_CLOSE"); }
+      ;
+
+when_states : when_cond_ex { parse_node *parent = make_node("when_states");
+                     				 $$ = add_child(parent, $1); }
+       	 		| when_state when_states { $$ = add_child($2, $1); }
+       			;
+
+when_state : when_cond_ex new_line { parse_node *parent = make_node("when_state");
+			                        		$$ = add_child(parent, $1);}
+		       | when_cond_ex SEMI { parse_node *parent = make_node("when_state");
+			                         add_child(parent, $1);
+		                           $$ = add_string(parent, "SEMI"); }
+		       ;
+
+when_cond_ex: value POINT value { parse_node *parent = make_node("when_cond_ex");
+																add_child(parent, $1);
+																add_string(parent, "POINT");
+																add_child(parent, $3); }
+					| IS type POINT value { parse_node *parent = make_node("when_cond_ex");
+																	add_string(parent, "ID");
+																  add_child(parent, $2);
+																  add_string(parent, "POINT");
+																	$$ = add_child(parent, $3); }
+					| ELSE POINT value { parse_node *parent = make_node("when_cond_ex");
+															 add_string(parent, "ELSE");
+														 	 add_string(parent, "POINT");
+														 	 $$ = add_child(parent, $3); }
+					;
 
 if_ex: if_state { parse_node* parent = make_node("if_ex");
                   $$ = add_child(parent, $1);}
@@ -321,22 +373,32 @@ if_state: IF cond_ex block { parse_node* parent = make_node("if_state");
                              add_string(parent, "IF");
                              add_child(parent, $2);
                              $$ = add_child(parent, $3); }
+			  | IF cond_ex value { parse_node* parent = make_node("if_state");
+                             add_string(parent, "IF");
+                             add_child(parent, $2);
+                             $$ = add_child(parent, $3); }
         ;
+
+else_if_states: else_if_state { parse_node *parent = make_node("else_if_states");
+																$$ = add_child(parent, $1); }
+							| else_if_state else_if_states { $$ = add_child($2, $1)}
 
 else_if_state: ELSEIF cond_ex block { parse_node* parent = make_node("else_if_state");
                                       add_string(parent, "ELSEIF");
                                       add_child(parent, $2);
                                       $$ = add_child(parent, $3); }
-             | cond_ex ELSEIF else_if_state block { parse_node* parent = make_node("else_if_state");
-                                                    add_child(parent, $1);
-                                                    add_string(parent, "ELSEIF");
-                                                    add_child(parent, $3);
-                                                    $$ = add_child(parent, $4);}
+						 | ELSEIF cond_ex value { parse_node* parent = make_node("else_if_state");
+                                      add_string(parent, "ELSEIF");
+						                          add_child(parent, $2);
+						                          $$ = add_child(parent, $3); }
              ;
 
 else_state: ELSE block { parse_node* parent = make_node("else_state");
                          add_string(parent, "ELSE");
                          $$ = add_child(parent, $2); }
+					| ELSE value { parse_node* parent = make_node("else_state");
+					               add_string(parent, "ELSE");
+					               $$ = add_child(parent, $2); }
           ;
 
 while_ex: WHILE cond_ex block { parse_node* parent = make_node("while_ex");
@@ -361,7 +423,7 @@ cond_state: value com_op value { parse_node* parent = make_node("cond_state");
                                add_child(parent, $1);
                                add_child(parent, $2);
                                $$ = add_child(parent, $3); }
-       | value is_op type { parse_node* parent = make_node("cond_state");
+       | value is_op type_ex { parse_node* parent = make_node("cond_state");
                             add_child(parent, $1);
                             add_child(parent, $2);
                             $$ = add_child(parent, $3); }
@@ -373,21 +435,10 @@ cond_state: value com_op value { parse_node* parent = make_node("cond_state");
                  $$ = add_child(parent, $1); }
        ;
 
-in_ex : value in_op range { parse_node* parent = make_node("in_ex");
-                            add_child(parent, $1);
-                            add_child(parent, $2);
-                            $$ = add_child(parent, $3); }
-     ;
-
-range: value range_op value { parse_node* parent = make_node("range"); }
-     | value range_op value STEP value { parse_node* parent = make_node("range");
-                                         add_child(parent, $1);
-                                         add_child(parent, $2);
-                                         add_child(parent, $3);
-                                         add_string(parent, "STEP");
-                                         $$ = add_child(parent, $5);}
-     | value { parse_node* parent = make_node("range");
-               $$ = add_child(parent, $1); }
+in_ex : value in_op iterable_value { parse_node* parent = make_node("in_ex");
+                            				 add_child(parent, $1);
+                            				 add_child(parent, $2);
+                            				 $$ = add_child(parent, $3); }
      ;
 
 declear_ex: var_op var_ex ASSIGNMENT value { parse_node* parent = make_node("declear_ex");
@@ -413,26 +464,42 @@ assign_ex: ID ass_op value{ parse_node* parent = make_node("assign_ex");
                             $$ = add_child(parent, $3);}
           ;
 
-var_ex : ID type_ex { parse_node* parent = make_node("var_ex");
-                      add_string(parent, "ID");
-                      $$ = add_child(parent, $2);}
+var_ex : ID COLON type_ex {parse_node* parent = make_node("var_ex");
+                        add_string(parent, "ID");
+                        add_string(parent, "COLON");
+                        $$ = add_child(parent, $3);}
        ;
 
-type_ex : COLON type { parse_node* parent = make_node("type_ex");
-					   add_string(parent, "COLON");
-					   $$ = add_child(parent, $2); }
-		;
 /* values */
+
+iterable_value: STRING { parse_node *parent = make_node("iterable_value");
+ 												 $$ = add_string(parent, "STRING"); }
+							| range { parse_node *parent = make_node("iterable_value");
+												$$ = add_child(parent, $1); }
+							| enum_value { parse_node *parent = make_node("iterable_value");
+														 $$ = add_child(parent, $1); }
+							| member { parse_node *parent = make_node("iterable_value");
+												 $$ = add_child(parent, $1); }
+							;
+
+range: value range_op value { parse_node* parent = make_node("range"); }
+     | value range_op value STEP value { parse_node* parent = make_node("range");
+                                         add_child(parent, $1);
+                                         add_child(parent, $2);
+                                         add_child(parent, $3);
+                                         add_string(parent, "STEP");
+                                         $$ = add_child(parent, $5);}
+     | value { parse_node* parent = make_node("range");
+               $$ = add_child(parent, $1); }
+     ;
 
 enum_value: enum_type tuple { parse_node* parent = make_node("enum_value");
                               add_child(parent, $1);
 							  $$ = add_child(parent, $2); }
           ;
 
-tuple: value COMMA tuple { parse_node* parent = make_node("tuple");
-                           add_child(parent, $1);
-                           add_string(parent, "COMMA");
-                           $$ = add_child(parent, $3);}
+tuple: value COMMA tuple { add_child($3, $1);
+                           $$ = add_string($3, "COMMA"); }
      | OPEN CLOSE { parse_node *parent = make_node("tuple");
                     add_string(parent, "OPEN");
                     $$ = add_string(parent, "CLOSE"); }
@@ -449,6 +516,7 @@ value: mult_ex add_op mult_ex { parse_node* parent = make_node("value");
                                  $$ = add_child(parent, $3); }
       | mult_ex { $$ = $1; }
       | enum_value { $$ = $1; }
+		  | NULL {$$ = make_node("NULL"); }
       ;
 
 mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
@@ -459,9 +527,11 @@ mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
         | factor { $$ = $1; }
         ;
 
-factor: ID { $$ = make_node("ID"); }
-      | NUMBER { $$ = make_node("NUMBER"); }
-	  | member { $$ = $1; }
+factor: NUMBER { $$ = make_node("NUMBER"); }
+ 	  	| object_ex { parse_node *parent = make_node("factor");
+		    						$$ = add_child(parent, $1); }
+			| function_ex { parse_node *parent = make_node("factor");
+											$$ = add_child(parent, $1); }
       | pre_uni_op factor { parse_node* parent = make_node("factor");
                             add_child(parent, $1);
                             $$ = add_child(parent, $2);}
@@ -474,16 +544,18 @@ factor: ID { $$ = make_node("ID"); }
                            $$ = add_string(parent, "CLOSE"); }
       ;
 
-member: ID INCL ID { parse_node* parent = make_node("member");
-                     add_string(parent, "ID");
-                     add_string(parent, "INCL");
-                     $$ = add_string(parent, "ID"); }
-      | ID INCL ID tuple { parse_node* parent = make_node("factor");
-                           add_string(parent, "ID");
-                           add_string(parent, "INCL");
-                           add_string(parent, "ID");
-                           $$ = add_child(parent, $4); }
-	  ;
+object_ex: member INCL function_ex { parse_node *parent = make_node("object_ex");
+																		 add_child(parent, $1);
+																	   add_string(parent, "INCL");
+																	   $$ = add_child(parent, $3); }
+				 | member { parse_node *parent = make_node("object_ex");
+			 							$$ = add_child(parent, $1);}
+				 ;
+
+member: ID INCL member { add_string($3, "ID");
+                         $$ = add_string($3, "INCL"); }
+      | ID { $$ = make_node("ID"); }
+	    ;
 
 /* operations */
 
@@ -547,7 +619,16 @@ var_op : VAR { $$ = make_node("VAR"); }
        | VAL { $$ = make_node("VAL"); }
        ;
 
+new_line : EOL { $$ = make_node("new_line"); }
+				 | EOL new_line {$$ = make_node("new_line"); }
+				 ;
+
 /* types */
+
+type_ex: type { $$ = $1; }
+			 | type NULLABLE { parse_node *parent = make_node("type_ex");
+		 										 add_child(parent, $1);
+											 	 $$ = add_string(parent, "NULLABLE")}
 
 type: BYTE { $$ = make_node("BYTE"); }
  		| SHORT	{ $$ = make_node("SHORT"); }
@@ -555,6 +636,8 @@ type: BYTE { $$ = make_node("BYTE"); }
  		| LONG	{ $$ = make_node("LONG"); }
  		| FLOAT { $$ = make_node("FLOAT"); }
  		| DOUBLE { $$ = make_node("DOUBLE"); }
+ 		| STRING { $$ = make_node("STRING"); }
+ 		| BOOL { $$ = make_node("BOOL"); }
     ;
 
 enum_type: LISTOF { $$ = make_node("LISTOF"); }

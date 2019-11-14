@@ -12,9 +12,14 @@ INTNUMBER [0-9]+
 NUMBER [0-9]+[.]?[0-9]*
 ID [a-zA-Z][a-zA-Z0-9]*
 SPACE [ \t\r]+
+COMMENT /\*.*\*/ | //[^\n]*
 
 %%
 
+"package" { return PACKAGE; }
+"import" { return IMPORT; }
+"*" { return FORALL; }
+"->" { return POINT; }
 "fun" { return FUNCTION; }
 
 "down" { return DOWN; }
@@ -29,6 +34,8 @@ SPACE [ \t\r]+
 "Long" { return LONG; }
 "Float" { return FLOAT; }
 "Double" { return DOUBLE; }
+"String" { return STRING; }
+"Boolean" { return BOOL; }
 
  /* in operation */
 "in" { return IN; }
@@ -65,7 +72,7 @@ SPACE [ \t\r]+
 "-=" { return MINUS_ASSIGNMENT; }
 "*=" { return MULT_ASSIGNMENT; }
 "/=" { return DIV_ASSIGNMENT; }
-"%%=" { return MOD_ASSIGNMENT; }
+"%=" { return MOD_ASSIGNMENT; }
 
  /* uniary operation */
 "++" { return INCR; }
@@ -97,7 +104,6 @@ SPACE [ \t\r]+
 "&&" { return AND; }
 "||" { return OR; }
 
-
 "," { return COMMA; }
 "{" { return CURLY_OPEN; }
 "}" { return CURLY_CLOSE; }
@@ -108,7 +114,7 @@ SPACE [ \t\r]+
 "("	{ return OPEN; }
 ")"	{ return CLOSE; }
 
-
+"null" { return NULL; }
 "\n"	{ return EOL; }
 ";" { return SEMI; }
 
@@ -117,11 +123,13 @@ SPACE [ \t\r]+
 					return STRING;}
 
 {ID} { yylval.str_var = yytext;
-		printf("%s\n", yytext);
-		return ID;}
+			return ID;}
 
 {NUMBER} { yylval.double_var = atof(yytext);
 					return NUMBER; }
+
+{COMMENT} { yylval.str_var = yytext;
+						return ID;}
 
 
 {SPACE} { /* ignore */ }
