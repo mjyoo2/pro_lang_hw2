@@ -8,10 +8,9 @@ fun getStringLength(obj: Any): Int? {
 
 fun main() {
     fun printLength(obj: Any) {
-        println("Hello world")
+        println("'$obj' string length is ${getStringLength(obj) ?: "... err, not a string"} ")
     }
     printLength("Incomprehensibilities")
     printLength(1000)
     printLength(listOf(Any()))
 }
-

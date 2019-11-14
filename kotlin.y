@@ -588,9 +588,12 @@ mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
                                   add_child(parent, $1);
                                   add_child(parent, $2);
                                   $$ = add_child(parent, $3); }
-        | factor post_uni_op { parse_node* parent = make_node("mult_ex");
+        | factor INCR { parse_node* parent = make_node("mult_ex");
                              add_child(parent, $1);
-							 $$ = add_child(parent, $2); }
+							 $$ = add_string(parent, "INCR"); }
+			 | factor DECR { parse_node* parent = make_node("mult_ex");
+                            add_child(parent, $1);
+							 $$ = add_string(parent, "DECR"); }
 		| STRING { $$ = make_node("STRING"); }
         | factor { $$ = $1; }
         ;
@@ -642,7 +645,7 @@ member: ID INCL { parse_node *parent = make_node("member");
 
 range_op : FROMTO { $$ = make_node("FROMTO"); }
          | DOWNTO { $$ = make_node("DOWNTO"); }
-		 
+
          ;
 
 pre_uni_op : INCR { $$ = make_node("INCR"); }
@@ -652,9 +655,9 @@ pre_uni_op : INCR { $$ = make_node("INCR"); }
            | MINUS { $$ = make_node("MINUS"); }
            ;
 
-post_uni_op : INCR { $$ = make_node("INCR"); }
+/* post_uni_op : INCR { $$ = make_node("INCR"); }
             | DECR { $$ = make_node("DECR"); }
-            ;
+            ; */
 
 ass_op : PLUS_ASSIGNMENT { $$ = make_node("PLUS_ASSIGNMENT"); }
        | MINUS_ASSIGNMENT { $$ = make_node("MINUS_ASSIGNMENT"); }
