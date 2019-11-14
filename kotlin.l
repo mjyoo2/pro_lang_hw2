@@ -12,7 +12,7 @@ INTNUMBER [0-9]+
 NUMBER [0-9]+[.]?[0-9]*
 ID [a-zA-Z][a-zA-Z0-9]*
 SPACE [ \t\r]+
-COMMENT /\*.*\*/ | //[^\n]*
+COMMENT (\/\*.*\*\/|\/{2}[^\n]*)
 
 %%
 
@@ -27,6 +27,7 @@ COMMENT /\*.*\*/ | //[^\n]*
 "when" { return WHEN; }
 "return" { return RET; }
 
+"Any" { return ANY; }
 "Unit" { return UNIT; }
 "Byte" { return BYTE; }
 "Short" { return SHORT; }
@@ -34,7 +35,7 @@ COMMENT /\*.*\*/ | //[^\n]*
 "Long" { return LONG; }
 "Float" { return FLOAT; }
 "Double" { return DOUBLE; }
-"String" { return STRING; }
+"String" { return STR; }
 "Boolean" { return BOOL; }
 
  /* in operation */
@@ -109,12 +110,12 @@ COMMENT /\*.*\*/ | //[^\n]*
 "}" { return CURLY_CLOSE; }
 "?" { return NULLABLE; }
 ":" { return COLON; }
-'.' { return INCL; }
+"." { return INCL; }
 
 "("	{ return OPEN; }
 ")"	{ return CLOSE; }
 
-"null" { return NULL; }
+"null" { return NUL; }
 "\n"	{ return EOL; }
 ";" { return SEMI; }
 
@@ -129,8 +130,7 @@ COMMENT /\*.*\*/ | //[^\n]*
 					return NUMBER; }
 
 {COMMENT} { yylval.str_var = yytext;
-						return ID;}
-
+		return ID;}
 
 {SPACE} { /* ignore */ }
 
