@@ -12,13 +12,15 @@ INTNUMBER [0-9]+
 NUMBER [0-9]+[.]?[0-9]*
 ID [a-zA-Z][a-zA-Z0-9]*
 SPACE [ \t\r]+
-COMMENT (\/\*.*\*\/|\/{2}[^\n]*)
+COMMENT ([\/][\*].*[\*][\/]|\/{2}[^\n]*)
 
 %%
 
+{COMMENT} {/* ignore */}
+
 "package" { return PACKAGE; }
 "import" { return IMPORT; }
-"*" { return FORALL; }
+".*" { return FORALL; }
 "->" { return POINT; }
 "fun" { return FUNCTION; }
 
@@ -128,9 +130,6 @@ COMMENT (\/\*.*\*\/|\/{2}[^\n]*)
 
 {NUMBER} { yylval.double_var = atof(yytext);
 					return NUMBER; }
-
-{COMMENT} { yylval.str_var = yytext;
-		return ID;}
 
 {SPACE} { /* ignore */ }
 

@@ -100,6 +100,7 @@ void print_tree(parse_node *parent, int layers);
 %type <node> type
 %type <node> enum_type
 
+%token <int_var> COMMENT
 %token <int_var> PACKAGE
 %token <int_var> IMPORT
 %token <int_var> FORALL
@@ -194,7 +195,7 @@ void print_tree(parse_node *parent, int layers);
 
 %token <double_var> NUMBER
 %token <str_var> ID
-%token <str_var> COMMENT
+
 %token <str_var> STRING
 
 // https://kotlinlang.org/docs/reference/basic-syntax.html
@@ -311,8 +312,7 @@ expression: assign_ex { parse_node *parent = make_node("expression");
 		  | when_ex { parse_node *parent = make_node("expression");
 	                    $$ = add_child(parent, $1); }
 		  | return_ex { parse_node *parent = make_node("expression");
-						$$ = add_child(parent, $1); }
-		  | COMMENT { $$ = make_node("COMMENT"); }
+						$$ = add_child(parent, $1); } 
 		  | value { parse_node *parent = make_node("expression");
 					$$ = add_child(parent, $1); }
           ;
@@ -330,7 +330,7 @@ package_ex : PACKAGE object_ex { parse_node *parent = make_node("package_ex");
 import_ex : IMPORT object_ex { parse_node *parent = make_node("import_ex");
 																 add_string(parent, "IMPORT");
 																 $$ = add_child(parent, $2); }
-			| IMPORT members FORALL { parse_node *parent = make_node("import_ex");
+			| IMPORT object_ex FORALL { parse_node *parent = make_node("import_ex");
 										add_string(parent, "IMPORT");
 										add_child(parent, $2);
 									 	 $$ = add_string(parent, "FORALL"); }
@@ -710,7 +710,7 @@ int yyerror(const char *s)
 
 parse_node* make_dummy(){
 	  parse_node *new_node = (parse_node *) malloc(sizeof(parse_node));
-	strcmp(new_node->str, "DUMMY");
+	strcpy(new_node->str, "DUMMY");
 	new_node->parent = NULL;
     new_node->next = NULL;
     new_node->prev = NULL;
