@@ -11,9 +11,10 @@ yydebug = 1;
 
 typedef struct parse_tree{
 		char str[20];
+		char data[20];
 		struct parse_tree *child;
-    struct parse_tree *next;
-    struct parse_tree *prev;
+	    struct parse_tree *next;
+	    struct parse_tree *prev;
 		struct parse_tree *parent;
 }parse_node;
 
