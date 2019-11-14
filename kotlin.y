@@ -50,7 +50,7 @@ void print_tree(parse_node *parent, int layers);
 %type <node> import_ex
 %type <node> function_ex
 %type <node> for_ex
-%type <node> if_ex
+/* %type <node> if_ex */
 %type <node> if_state
 %type <node> else_if_states
 %type <node> else_if_state
@@ -296,8 +296,13 @@ expression: assign_ex { parse_node *parent = make_node("expression");
                         $$ = add_child(parent, $1); }
           | declear_ex { parse_node *parent = make_node("expression");
                        $$ = add_child(parent, $1);}
-		  | if_ex { parse_node *parent = make_node("expression");
+		  | if_state { parse_node *parent = make_node("expression");
                     $$ = add_child(parent, $1); }
+			| else_if_state { parse_node *parent = make_node("expression");
+                    $$ = add_child(parent, $1); }
+			| else_state { parse_node *parent = make_node("expression");
+                    $$ = add_child(parent, $1); }
+
 		  | new_line {$$ = make_node("new_line"); }
           | while_ex { parse_node *parent = make_node("expression");
                        $$ = add_child(parent, $1); }
@@ -312,7 +317,7 @@ expression: assign_ex { parse_node *parent = make_node("expression");
 		  | when_ex { parse_node *parent = make_node("expression");
 	                    $$ = add_child(parent, $1); }
 		  | return_ex { parse_node *parent = make_node("expression");
-						$$ = add_child(parent, $1); } 
+						$$ = add_child(parent, $1); }
 		  | value { parse_node *parent = make_node("expression");
 					$$ = add_child(parent, $1); }
           ;
@@ -357,41 +362,47 @@ when_ex: WHEN OPEN object_ex CLOSE when_block { parse_node *parent = make_node("
 			 ;
 
 when_block : CURLY_OPEN when_states CURLY_CLOSE { parse_node *parent = make_node("when_block");
-                                        add_string(parent, "CURLY_OPEN");
-                                        add_child(parent, $2);
-                                        $$ = add_string(parent, "CURLY_CLOSE"); }
+                                       add_string(parent, "CURLY_OPEN");
+                                       add_child(parent, $2);
+                                       $$ = add_string(parent, "CURLY_CLOSE"); }
+     | CURLY_OPEN when_cond_ex  CURLY_CLOSE { parse_node *parent = make_node("when_block");
+											add_string(parent, "CURLY_OPEN");
+											add_child(parent, $2);
+											$$ = add_string(parent, "CURLY_OPEN"); }
+	  ;
+
+when_states : when_tate new_line when_states { parse_node *parent = make_node("when_states");
+                       		add_child(parent, $1);
+                       		$$ = add_child(parent, $3); }
+	   | when_state { parse_node *parent = make_node("when_states");
+				 $$ = add_child(parent, $1); }
+	   | when_state new_line { parse_node *parent = make_node("when_states");
+						  $$ = add_child(parent, $1); }
       ;
 
-when_states : when_cond_ex { parse_node *parent = make_node("when_states");
-                     				 $$ = add_child(parent, $1); }
-       	 		| when_state when_states { parse_node *parent = make_node("when_states");
-											add_child(parent, $1);
-											$$ = add_child(parent, $2); }
-       			;
+when_state : when_cond_ex  { parse_node *parent = make_node("when_state");
+                             $$ = add_child(parent, $1);}
+	  | new_line when_cond_ex { parse_node *parent = make_node("when_state");
+							  add_child(parent, $1);
+							  $$ = add_child(parent, $2);}
+	  ;
 
-when_state : when_cond_ex new_line { parse_node *parent = make_node("when_state");
-			                        		$$ = add_child(parent, $1);}
-		       | when_cond_ex SEMI { parse_node *parent = make_node("when_state");
-			                         add_child(parent, $1);
-		                           $$ = add_string(parent, "SEMI"); }
-		       ;
-
-when_cond_ex: value POINT value { parse_node *parent = make_node("when_cond_ex");
+when_cond_ex: value POINT expression { parse_node *parent = make_node("when_cond_ex");
 																add_child(parent, $1);
 																add_string(parent, "POINT");
 																add_child(parent, $3); }
-					| IS type POINT value { parse_node *parent = make_node("when_cond_ex");
+					| IS type POINT expression { parse_node *parent = make_node("when_cond_ex");
 																	add_string(parent, "IS");
 																  add_child(parent, $2);
 																  add_string(parent, "POINT");
 																	$$ = add_child(parent, $4); }
-					| ELSE POINT value { parse_node *parent = make_node("when_cond_ex");
+					| ELSE POINT expression { parse_node *parent = make_node("when_cond_ex");
 															 add_string(parent, "ELSE");
 														 	 add_string(parent, "POINT");
 														 	 $$ = add_child(parent, $3); }
 					;
 
-if_ex: if_state { parse_node* parent = make_node("if_ex");
+/* if_ex: if_state { parse_node* parent = make_node("if_ex");
                   $$ = add_child(parent, $1);}
      | if_state else_state { parse_node* parent = make_node("if_ex");
                              add_child(parent, $1);
@@ -403,7 +414,7 @@ if_ex: if_state { parse_node* parent = make_node("if_ex");
                                            add_child(parent, $1);
                                            add_child(parent, $2);
                                            $$ = add_child(parent, $3);}
-     ;
+     ; */
 
 if_state: IF cond_ex block { parse_node* parent = make_node("if_state");
                              add_string(parent, "IF");
@@ -417,7 +428,7 @@ if_state: IF cond_ex block { parse_node* parent = make_node("if_state");
 
 else_if_states: else_if_state { parse_node *parent = make_node("else_if_states");
 																$$ = add_child(parent, $1); }
-			| else_if_state else_if_states {parse_node *parent = make_node("else_if_states"); 
+			| else_if_state else_if_states {parse_node *parent = make_node("else_if_states");
 											add_child(parent, $1);
 											$$ = add_child(parent, $2);}
 			 ;
