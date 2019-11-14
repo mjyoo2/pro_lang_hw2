@@ -765,6 +765,12 @@ parse_node* add_string(parse_node* parent, char* child){
     return add_child(parent, child_node);
 }
 
+parse_node* add_string_ID(parse_node* parent, char* child){
+    parse_node *child_node = make_node("ID");
+		strcpy(child_node->data, child);
+    return add_child(parent, child_node);
+}
+
 parse_node* add_child(parse_node* parent, parse_node* child){
     last_add(parent->child, child);
     child->parent = parent;
@@ -785,7 +791,12 @@ void print_tree(parse_node *parent, int layers){
 	for (int i=0; i<layers; i++){
 		printf(" ");
 	}
-	printf("-%s\n",parent->str);
+	if (strcmp("ID", parent->str) == 0){
+			printf("-%s %s",parent->str, parent->data);
+	}
+	else{
+			printf("-%s\n",parent->str);
+	}
 	parse_node *next_node = parent->child->next;
 
 	while(next_node != NULL){
