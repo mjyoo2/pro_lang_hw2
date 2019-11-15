@@ -572,10 +572,10 @@ enum_value: enum_type close_tuple { parse_node* parent = make_node("enum_value")
 close_tuple: OPEN CLOSE { parse_node *parent = make_node("close_tuple");
                     		add_string(parent, "OPEN");
                     		$$ = add_string(parent, "CLOSE"); }
-             OPEN tuple CLOSE { parse_node *parent = make_node("close_tuple");
+             |OPEN tuple CLOSE { parse_node *parent = make_node("close_tuple");
                           add_string(parent, "OPEN");
                           add_child(parent, $2);
-                          $$ = add_string(parent, "CLOSE");}
+            ;              $$ = add_string(parent, "CLOSE");}
 
 tuple: value COMMA tuple { parse_node *parent = make_node("tuple");
 						   				 		add_child(parent, $1);
@@ -647,9 +647,9 @@ pre_uni_op : INCR { $$ = make_node("INCR"); }
            | MINUS { $$ = make_node("MINUS"); }
            ;
 
-/* post_uni_op : INCR { $$ = make_node("INCR"); }
+post_uni_op : INCR { $$ = make_node("INCR"); }
             | DECR { $$ = make_node("DECR"); }
-            ; */
+            ;
 
 ass_op : PLUS_ASSIGNMENT { $$ = make_node("PLUS_ASSIGNMENT"); }
        | MINUS_ASSIGNMENT { $$ = make_node("MINUS_ASSIGNMENT"); }
