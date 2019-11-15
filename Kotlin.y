@@ -74,7 +74,7 @@ void print_tree(parse_node *parent, int layers);
 %type <node> iterable_value
 %type <node> range
 %type <node> enum_value
-%type <node> close_
+%type <node> close_tuple
 %type <node> tuple
 %type <node> value
 %type <node> mult_ex
