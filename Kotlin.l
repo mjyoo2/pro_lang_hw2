@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "kotlin.tab.h"
+#include "Kotlin.tab.h"
 
 extern int yyerror(const char*);
 %}

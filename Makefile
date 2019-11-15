@@ -1,7 +1,7 @@
 #Makefiel for expression calculator
 
 TARGET=parse
-CFG=kotlin
+CFG=Kotlin
 LEX_SRC=$(CFG).l
 YACC_SRC=$(CFG).y
 SRC=main.c
