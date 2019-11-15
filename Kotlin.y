@@ -60,6 +60,7 @@ void print_tree(parse_node *parent, int layers);
 %type <node> while_ex
 %type <node> when_ex
 %type <node> when_block
+%type <node> when_sub_block
 %type <node> when_states
 %type <node> when_state
 %type <node> when_cond_ex
@@ -371,20 +372,23 @@ when_ex: WHEN OPEN object_ex CLOSE when_block { parse_node *parent = make_node("
 											   $$ = add_child(parent, $5);}
 			 ;
 
-when_block : CURLY_OPEN when_states CURLY_CLOSE { parse_node *parent = make_node("when_block");
+when_block : CURLY_OPEN when_sub_block CURLY_CLOSE { parse_node *parent = make_node("when_block");
                                        add_string(parent, "CURLY_OPEN");
                                        add_child(parent, $2);
                                        $$ = add_string(parent, "CURLY_CLOSE"); }
-     | CURLY_OPEN when_cond_ex  CURLY_CLOSE { parse_node *parent = make_node("when_block");
+     /* | CURLY_OPEN when_cond_ex  CURLY_CLOSE { parse_node *parent = make_node("when_block");
 											add_string(parent, "CURLY_OPEN");
 											add_child(parent, $2);
-											$$ = add_string(parent, "CURLY_OPEN"); }
+											$$ = add_string(parent, "CURLY_OPEN"); } */
 	  ;
 
-when_states : when_state new_line when_states { parse_node *parent = make_node("when_states");
+when_sub_block:  when_states when_sub_block { parse_node *parent = make_node("when_sub_block");
                        		add_child(parent, $1);
                        		$$ = add_child(parent, $3); }
-	   | when_state { parse_node *parent = make_node("when_states");
+							| when_states {parse_node *parent =make_node("when_sub_block");
+															$$ = add_child(parent, $1); }
+
+when_states :when_state { parse_node *parent = make_node("when_states");
 				 $$ = add_child(parent, $1); }
 	   | when_state new_line { parse_node *parent = make_node("when_states");
 						  $$ = add_child(parent, $1); }
@@ -430,7 +434,7 @@ if_state: IF cond_ex block { parse_node* parent = make_node("if_state");
                              add_string(parent, "IF");
                              add_child(parent, $2);
                              $$ = add_child(parent, $3); }
-		| IF cond_ex expression { parse_node* parent = make_node("if_state");
+	     	| IF cond_ex expression { parse_node* parent = make_node("if_state");
                              add_string(parent, "IF");
                              add_child(parent, $2);
                              $$ = add_child(parent, $3); }
@@ -493,9 +497,9 @@ cond_state: value com_op value { parse_node* parent = make_node("cond_state");
                               $$ = add_string(parent, "CLOSE"); }
        | value { parse_node* parent = make_node("cond_state");
                  $$ = add_child(parent, $1); }
-	   | in_ex { parse_node* parent = make_node("cond_state");
+	     | in_ex { parse_node* parent = make_node("cond_state");
 				 $$ = add_child(parent, $1); }
-      ;
+       ;
 
 in_ex : value in_op iterable_value { parse_node* parent = make_node("in_ex");
                             				 add_child(parent, $1);
@@ -626,7 +630,7 @@ number: NUMBER { $$ = make_node("NUMBER"); }
 
 object_ex: ID INCL object_ex { parse_node *parent = make_node("object_ex");
 				  		add_string_ID(parent, $1, "ID");
-                  		add_string(parent, "INCL"); 
+                  		add_string(parent, "INCL");
 						$$ = add_child(parent, $3);}
 	  | ID { parse_node *parent = make_node("object_ex");
 	  		 $$ = add_string_ID(parent, $1, "ID"); }
@@ -803,7 +807,7 @@ void print_tree(parse_node *parent, int layers){
 			printf("-%s\n",parent->str);
 	}
 	parse_node *next_node = parent->child->next;
-	
+
 	while(next_node!= NULL){
 		print_tree(next_node, layers+1);
 		next_node = next_node->next;
