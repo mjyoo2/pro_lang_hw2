@@ -77,8 +77,6 @@ void print_tree(parse_node *parent, int layers);
 %type <node> mult_ex
 %type <node> factor
 %type <node> object_ex
-%type <node> members
-%type <node> member
 %type <node> new_line
 
 /* operations */
@@ -601,11 +599,11 @@ mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
         | factor INCR { parse_node* parent = make_node("mult_ex");
                              add_child(parent, $1);
 							 $$ = add_string(parent, "INCR"); }
-			 | factor DECR { parse_node* parent = make_node("mult_ex");
+			  | factor DECR { parse_node* parent = make_node("mult_ex");
                             add_child(parent, $1);
 							 $$ = add_string(parent, "DECR"); }
-		| STRING { parse_node *new_node = make_node("STRING");
-					strcpy(new_node->data, $1);	
+		    | STRING { parse_node *new_node = make_node("STRING");
+					strcpy(new_node->data, $1);
 				   $$ = new_node;  }
         | factor { $$ = $1; }
         ;
@@ -613,8 +611,6 @@ mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
 factor: NUMBER { $$ = make_node("NUMBER"); }
  	  	| object_ex { parse_node *parent = make_node("factor");
 		    						$$ = add_child(parent, $1); }
-			| function_ex { parse_node *parent = make_node("factor");
-											$$ = add_child(parent, $1); }
       | pre_uni_op factor { parse_node* parent = make_node("factor");
                             add_child(parent, $1);
                             $$ = add_child(parent, $2);}
@@ -624,27 +620,13 @@ factor: NUMBER { $$ = make_node("NUMBER"); }
                            $$ = add_string(parent, "CLOSE"); }
       ;
 
-object_ex: members function_ex { parse_node *parent = make_node("object_ex");
-							 add_child(parent, $1);
- 							  $$ =  add_child(parent, $2); }
-		 | member function_ex { parse_node *parent = make_node("object_ex");
-								add_child(parent, $1);
-								$$ = add_child(parent, $2); }
-		 | members ID { parse_node *parent = make_node("object_ex");
-	 					add_child(parent, $1);
-						$$ = add_string_ID(parent, $2, "ID"); }
-		 | member ID { parse_node *parent = make_node("object_ex");
-					   add_child(parent, $1);
-					   $$ = add_string_ID(parent, $2, "ID");}
-		 | ID { parse_node *parent = make_node("object_ex");
-				$$ = add_string_ID(parent, $1, "ID"); }
-		 ;
-
-member: ID INCL member { parse_node *parent = make_node("member");
+object_ex: ID INCL object_ex { parse_node *parent = make_node("object_ex");
 				  		add_string_ID(parent, $1, "ID");
                   		$$ = add_string(parent, "INCL"); }
-	  | ID { parse_node *parent = make_node("member");
+	  | ID { parse_node *parent = make_node("object_ex");
 	  		 $$ = add_string_ID(parent, $1, "ID"); }
+    | function_ex {parse_node *parent = make_node("object_ex");
+                   $$ = add_child(parent, $1); }
 	  ;
 
 /* operations */
@@ -773,7 +755,7 @@ parse_node* add_string(parse_node* parent, char* child){
 parse_node* add_string_ID(parse_node* parent, char* child, char *ID){
     parse_node *child_node = make_node(ID);
 	strcpy(child_node->data, child);
-	
+
 	for (int i=0; i<1000; i++){
 		if ((47<child_node->data[i]&&child_node->data[i]<58)||(64<child_node->data[i]&&child_node->data[i]<91)||(96<child_node->data[i]&&child_node->data[i]<123)||child_node->data[i]=='\"'){
 			continue;
