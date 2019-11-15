@@ -34,7 +34,7 @@
 # define YY_YY_KOTLIN_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -127,7 +127,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 29 "Kotlin.y" /* yacc.c:1909  */
+#line 31 "Kotlin.y" /* yacc.c:1909  */
 struct parse_tree *node; char *str_var; int int_var; double double_var;
 
 #line 134 "Kotlin.tab.h" /* yacc.c:1909  */

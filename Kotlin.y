@@ -7,7 +7,7 @@ extern int yylex(void);
 extern void yyterminate();
 extern int yyerror(const char *s);
 
-yydebug = 1
+yydebug = 1;
 
 typedef struct parse_tree{
 		char str[200];
@@ -626,7 +626,8 @@ number: NUMBER { $$ = make_node("NUMBER"); }
 
 object_ex: ID INCL object_ex { parse_node *parent = make_node("object_ex");
 				  		add_string_ID(parent, $1, "ID");
-                  		$$ = add_string(parent, "INCL"); }
+                  		add_string(parent, "INCL"); 
+						$$ = add_child(parent, $3);}
 	  | ID { parse_node *parent = make_node("object_ex");
 	  		 $$ = add_string_ID(parent, $1, "ID"); }
     | function_ex {parse_node *parent = make_node("object_ex");
@@ -802,8 +803,8 @@ void print_tree(parse_node *parent, int layers){
 			printf("-%s\n",parent->str);
 	}
 	parse_node *next_node = parent->child->next;
-
-	while(next_node != NULL){
+	
+	while(next_node!= NULL){
 		print_tree(next_node, layers+1);
 		next_node = next_node->next;
 	}
