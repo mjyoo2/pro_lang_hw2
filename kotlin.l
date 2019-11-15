@@ -10,7 +10,7 @@ extern int yyerror(const char*);
 STRING \".*\"
 range [0-9]+\.\.
 NUMBER [0-9]+[.]?[0-9]*
-ID [a-zA-Z][a-zA-Z0-9|\_]*
+ID [a-zA-Z][a-zA-Z0-9]*
 SPACE [ \t\r]+
 COMMENT (\/[\*].*[\*]]\/|\/{2}[^\n]*)
 
@@ -126,10 +126,12 @@ COMMENT (\/[\*].*[\*]]\/|\/{2}[^\n]*)
  /* factor */
 {range} { return RANGE; }
 {STRING} { yylval.str_var = yytext;
+		   printf("%s\n", yytext);
 					return STRING;}
 
 {ID} { yylval.str_var = yytext;
-			return ID;}
+	
+		return ID;}
 
 {NUMBER} { yylval.double_var = atof(yytext);
 					return NUMBER; }

@@ -7,11 +7,9 @@ extern int yylex(void);
 extern void yyterminate();
 extern int yyerror(const char *s);
 
-yydebug = 1;
-
 typedef struct parse_tree{
-		char str[20];
-		char data[20];
+		char str[200];
+		char data[2000];
 		struct parse_tree *child;
 	    struct parse_tree *next;
 	    struct parse_tree *prev;
@@ -21,6 +19,7 @@ typedef struct parse_tree{
 parse_node* make_dummy();
 parse_node* make_node(char* new_data);
 parse_node* add_string(parse_node* parent, char* child);
+parse_node* add_string_ID(parse_node* parent, char* child, char *ID);
 parse_node* add_child(parse_node* parent, parse_node* child);
 void last_add(parse_node *temp, parse_node *new_node);
 void print_tree(parse_node *parent, int layers);
@@ -230,12 +229,12 @@ code: def_func { parse_node* parent = make_node("code");
 
 def_func : FUNCTION ID arg_block block { parse_node *parent = make_node("def_func");
 		                                  add_string(parent, "FUNCTION");
-					   					  add_string(parent, "ID");
+					   					  add_string_ID(parent, $2,"ID");
 		                                  add_child(parent, $3);
 		                                  $$ = add_child(parent, $4); }
          | FUNCTION ID arg_block ASSIGNMENT state { parse_node *parent = make_node("def_func");
                                               add_string(parent, "FUNCTION");
-											add_string(parent, "ID");
+											add_string_ID(parent, $2, "ID" );
                                               add_child(parent, $3);
                                               add_string(parent, "ASSIGNMENT");
                                               $$ = add_child(parent, $5); }
@@ -351,7 +350,7 @@ import_ex : IMPORT object_ex { parse_node *parent = make_node("import_ex");
 			;
 
 function_ex : ID tuple { parse_node *parent = make_node("function_ex");
-                         add_string(parent, "ID");
+                         add_string_ID(parent, $1, "ID");
                          $$ = add_child(parent, $2);}
             ;
 
@@ -510,7 +509,7 @@ declear_ex: var_op var_ex ASSIGNMENT value { parse_node* parent = make_node("dec
 
            | var_op ID ASSIGNMENT value { parse_node* parent = make_node("declear_ex");
                                           add_child(parent, $1);
-                                          add_string(parent, "ID");
+                                          add_string_ID(parent, $2, "ID");
                                           add_string(parent, "ASSIGNMNET");
                                           $$ = add_child(parent, $4);}
 
@@ -520,13 +519,13 @@ declear_ex: var_op var_ex ASSIGNMENT value { parse_node* parent = make_node("dec
            ;
 
 assign_ex: ID ass_op value{ parse_node* parent = make_node("assign_ex");
-                            add_string(parent, "ID");
+                            add_string_ID(parent, $1, "ID");
                             add_child(parent, $2);
                             $$ = add_child(parent, $3);}
           ;
 
 var_ex : ID COLON type_ex {parse_node* parent = make_node("var_ex");
-                        add_string(parent, "ID");
+                        add_string_ID(parent, $1, "ID");
                         add_string(parent, "COLON");
                         $$ = add_child(parent, $3);}
        ;
@@ -534,7 +533,7 @@ var_ex : ID COLON type_ex {parse_node* parent = make_node("var_ex");
 /* values */
 
 iterable_value: STRING { parse_node *parent = make_node("iterable_value");
- 												 $$ = add_string(parent, "STRING"); }
+ 						 $$ = add_string_ID(parent,$1, "STRING"); }
 							| range { parse_node *parent = make_node("iterable_value");
 												$$ = add_child(parent, $1); }
 							| enum_value { parse_node *parent = make_node("iterable_value");
@@ -595,7 +594,9 @@ mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
 			 | factor DECR { parse_node* parent = make_node("mult_ex");
                             add_child(parent, $1);
 							 $$ = add_string(parent, "DECR"); }
-		| STRING { $$ = make_node("STRING"); }
+		| STRING { parse_node *new_node = make_node("STRING");
+					strcpy(new_node->data, $1);	
+				   $$ = new_node;  }
         | factor { $$ = $1; }
         ;
 
@@ -621,12 +622,12 @@ object_ex: members function_ex { parse_node *parent = make_node("object_ex");
 								$$ = add_child(parent, $2); }
 		 | members ID { parse_node *parent = make_node("object_ex");
 	 					add_child(parent, $1);
-						$$ = add_string(parent, "ID"); }
+						$$ = add_string_ID(parent, $2, "ID"); }
 		 | member ID { parse_node *parent = make_node("object_ex");
 					   add_child(parent, $1);
-					   $$ = add_string(parent, "ID");}
+					   $$ = add_string_ID(parent, $2, "ID");}
 		 | ID { parse_node *parent = make_node("object_ex");
-				$$ = add_string(parent, "ID"); }
+				$$ = add_string_ID(parent, $1, "ID"); }
 		 ;
 
 members : member members { parse_node *parent = make_node("members");
@@ -638,7 +639,7 @@ members : member members { parse_node *parent = make_node("members");
 		;
 
 member: ID INCL { parse_node *parent = make_node("member");
-				  add_string(parent, "ID");
+				  add_string_ID(parent, $1, "ID");
                   $$ = add_string(parent, "INCL"); }
 	  ;
 
@@ -765,9 +766,19 @@ parse_node* add_string(parse_node* parent, char* child){
     return add_child(parent, child_node);
 }
 
-parse_node* add_string_ID(parse_node* parent, char* child){
-    parse_node *child_node = make_node("ID");
-		strcpy(child_node->data, child);
+parse_node* add_string_ID(parse_node* parent, char* child, char *ID){
+    parse_node *child_node = make_node(ID);
+	strcpy(child_node->data, child);
+	
+	for (int i=0; i<1000; i++){
+		if ((47<child_node->data[i]&&child_node->data[i]<58)||(64<child_node->data[i]&&child_node->data[i]<91)||(96<child_node->data[i]&&child_node->data[i]<123)||child_node->data[i]=='\"'){
+			continue;
+		}
+		else{
+			child_node->data[i] = 0;
+			break;
+		}
+	}
     return add_child(parent, child_node);
 }
 
@@ -791,8 +802,11 @@ void print_tree(parse_node *parent, int layers){
 	for (int i=0; i<layers; i++){
 		printf(" ");
 	}
-	if (strcmp("ID", parent->str) == 0){
-			printf("-%s %s",parent->str, parent->data);
+	if (parent->str[0] == 'I' && parent->str[1] =='D'){
+		printf("-%s <%s>\n",parent->str, parent->data);
+	}
+	else if (parent->str[0] == 'S' && parent->str[4]=='N'){
+		printf("-%s <%s>\n", parent->str, parent->data);
 	}
 	else{
 			printf("-%s\n",parent->str);
