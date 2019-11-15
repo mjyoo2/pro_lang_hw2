@@ -550,7 +550,17 @@ range: RANGE value { parse_node* parent = make_node("range");
 										add_child(parent,$2);
                                          add_string(parent, "STEP");
                                          $$ = add_child(parent, $4);}
-     ;
+     | value range_op value {parse_node *parent = make_node("range");
+	 						add_child(parent, $1);
+							add_child(parent, $2);
+							$$ = add_child(parent,$3);}
+	 | value range_op value STEP value {parse_node *parent = make_node("range");
+	 									add_child(parent, $1);
+										add_child(parent, $2);
+										add_child(parent, $3);
+										add_string(parent, "STEP");
+										$$ = add_child(parent, $5);}
+	 ;
 
 enum_value: enum_type tuple { parse_node* parent = make_node("enum_value");
                               add_child(parent, $1);
@@ -630,17 +640,11 @@ object_ex: members function_ex { parse_node *parent = make_node("object_ex");
 				$$ = add_string_ID(parent, $1, "ID"); }
 		 ;
 
-members : member members { parse_node *parent = make_node("members");
-						   add_child(parent, $1);
-						   $$ = add_child(parent, $2);}
-		| member { parse_node *parent = make_node("members");
-                     $$ = add_child(parent, $1);}
-
-		;
-
-member: ID INCL { parse_node *parent = make_node("member");
-				  add_string_ID(parent, $1, "ID");
-                  $$ = add_string(parent, "INCL"); }
+member: ID INCL member { parse_node *parent = make_node("member");
+				  		add_string_ID(parent, $1, "ID");
+                  		$$ = add_string(parent, "INCL"); }
+	  | ID { parse_node *parent = make_node("member");
+	  		 $$ = add_string_ID(parent, $1, "ID"); }
 	  ;
 
 /* operations */
