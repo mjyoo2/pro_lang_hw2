@@ -24,6 +24,7 @@ parse_node* add_string_ID(parse_node* parent, char* child, char *ID);
 parse_node* add_child(parse_node* parent, parse_node* child);
 void last_add(parse_node *temp, parse_node *new_node);
 void print_tree(parse_node *parent, int layers);
+parse_node* make_number(double num);
 
 %}
 
@@ -730,7 +731,6 @@ parse_node* make_dummy(){
 parse_node* make_node(char* new_data){
 	  parse_node *new_node = (parse_node *) malloc(sizeof(parse_node));
 	  strcpy(new_node->str, new_data);
-		new_node->data = {0, };
 		new_node->num = 0;
 	  new_node->parent = NULL;
     new_node->next = NULL;
@@ -739,10 +739,9 @@ parse_node* make_node(char* new_data){
 	  return new_node;
 }
 
-parse_node* make_number(int num){
+parse_node* make_number(double num){
 	  parse_node *new_node = (parse_node *) malloc(sizeof(parse_node));
 	  strcpy(new_node->str, "NUMBER");
-		new_node->data = {0, };
 		new_node->num = num;
 	  new_node->parent = NULL;
     new_node->next = NULL;

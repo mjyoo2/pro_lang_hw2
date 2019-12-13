@@ -126,7 +126,7 @@ COMMENT (\/[\*].*[\*]]\/|\/{2}[^\n]*)
  /* factor */
 {range} { return RANGE; }
 {STRING} { yylval.str_var = yytext;
-		   printf("%s\n", yytext);
+		 
 					return STRING;}
 
 {ID} { yylval.str_var = yytext;
@@ -138,7 +138,7 @@ COMMENT (\/[\*].*[\*]]\/|\/{2}[^\n]*)
 
 {SPACE} { /* ignore */ }
 
-.	{  printf("%d\n", yytext[0]);
+.	{
            yyerror("unexpected input");
 }
 
