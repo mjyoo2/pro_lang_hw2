@@ -7,6 +7,8 @@ extern int yylex(void);
 extern void yyterminate();
 extern int yyerror(const char *s);
 
+yydebug = 1;
+
 typedef struct parse_tree{
 		char str[200];
 		char data[2000];
@@ -60,6 +62,7 @@ parse_node* add_number(parse_node* parent, int num)
 %type <node> while_ex
 %type <node> when_ex
 %type <node> when_block
+%type <node> when_sub_block
 %type <node> when_states
 %type <node> when_state
 %type <node> when_cond_ex
@@ -74,13 +77,13 @@ parse_node* add_number(parse_node* parent, int num)
 %type <node> iterable_value
 %type <node> range
 %type <node> enum_value
+%type <node> close_tuple
 %type <node> tuple
 %type <node> value
 %type <node> mult_ex
 %type <node> factor
+%type <node> number
 %type <node> object_ex
-%type <node> members
-%type <node> member
 %type <node> new_line
 
 /* operations */
@@ -351,7 +354,7 @@ import_ex : IMPORT object_ex { parse_node *parent = make_node("import_ex");
 									 	 $$ = add_string(parent, "FORALL"); }
 			;
 
-function_ex : ID tuple { parse_node *parent = make_node("function_ex");
+function_ex : ID close_tuple { parse_node *parent = make_node("function_ex");
                          add_string_ID(parent, $1, "ID");
                          $$ = add_child(parent, $2);}
             ;
@@ -371,20 +374,23 @@ when_ex: WHEN OPEN object_ex CLOSE when_block { parse_node *parent = make_node("
 											   $$ = add_child(parent, $5);}
 			 ;
 
-when_block : CURLY_OPEN when_states CURLY_CLOSE { parse_node *parent = make_node("when_block");
+when_block : CURLY_OPEN when_sub_block CURLY_CLOSE { parse_node *parent = make_node("when_block");
                                        add_string(parent, "CURLY_OPEN");
                                        add_child(parent, $2);
                                        $$ = add_string(parent, "CURLY_CLOSE"); }
-     | CURLY_OPEN when_cond_ex  CURLY_CLOSE { parse_node *parent = make_node("when_block");
+     /* | CURLY_OPEN when_cond_ex  CURLY_CLOSE { parse_node *parent = make_node("when_block");
 											add_string(parent, "CURLY_OPEN");
 											add_child(parent, $2);
-											$$ = add_string(parent, "CURLY_OPEN"); }
+											$$ = add_string(parent, "CURLY_OPEN"); } */
 	  ;
 
-when_states : when_state new_line when_states { parse_node *parent = make_node("when_states");
+when_sub_block:  when_states when_sub_block { parse_node *parent = make_node("when_sub_block");
                        		add_child(parent, $1);
                        		$$ = add_child(parent, $3); }
-	   | when_state { parse_node *parent = make_node("when_states");
+							| when_states {parse_node *parent =make_node("when_sub_block");
+															$$ = add_child(parent, $1); }
+
+when_states :when_state { parse_node *parent = make_node("when_states");
 				 $$ = add_child(parent, $1); }
 	   | when_state new_line { parse_node *parent = make_node("when_states");
 						  $$ = add_child(parent, $1); }
@@ -430,7 +436,7 @@ if_state: IF cond_ex block { parse_node* parent = make_node("if_state");
                              add_string(parent, "IF");
                              add_child(parent, $2);
                              $$ = add_child(parent, $3); }
-		| IF cond_ex expression { parse_node* parent = make_node("if_state");
+	     	| IF cond_ex expression { parse_node* parent = make_node("if_state");
                              add_string(parent, "IF");
                              add_child(parent, $2);
                              $$ = add_child(parent, $3); }
@@ -493,9 +499,9 @@ cond_state: value com_op value { parse_node* parent = make_node("cond_state");
                               $$ = add_string(parent, "CLOSE"); }
        | value { parse_node* parent = make_node("cond_state");
                  $$ = add_child(parent, $1); }
-	   | in_ex { parse_node* parent = make_node("cond_state");
+	     | in_ex { parse_node* parent = make_node("cond_state");
 				 $$ = add_child(parent, $1); }
-      ;
+       ;
 
 in_ex : value in_op iterable_value { parse_node* parent = make_node("in_ex");
                             				 add_child(parent, $1);
@@ -535,7 +541,7 @@ var_ex : ID COLON type_ex {parse_node* parent = make_node("var_ex");
 /* values */
 
 iterable_value: STRING { parse_node *parent = make_node("iterable_value");
- 						 $$ = add_string_ID(parent,$1, "STRING"); }
+ 						 						$$ = add_string_ID(parent,$1, "STRING"); }
 							| range { parse_node *parent = make_node("iterable_value");
 												$$ = add_child(parent, $1); }
 							| enum_value { parse_node *parent = make_node("iterable_value");
@@ -545,31 +551,42 @@ iterable_value: STRING { parse_node *parent = make_node("iterable_value");
 							;
 
 range: RANGE value { parse_node* parent = make_node("range");
-				add_string(parent, "RANGE");
-				$$ = add_child(parent, $2);}
-     | RANGE value STEP value { parse_node* parent = make_node("range");
-                                         add_string(parent, "RANGE");
-										add_child(parent,$2);
-                                         add_string(parent, "STEP");
-                                         $$ = add_child(parent, $4);}
-     ;
+										add_string(parent, "RANGE");
+										$$ = add_child(parent, $2);}
+      | RANGE value STEP value { parse_node* parent = make_node("range");
+                                add_string(parent, "RANGE");
+																add_child(parent,$2);
+                                add_string(parent, "STEP");
+                                 $$ = add_child(parent, $4);}
+     | value range_op value {parse_node *parent = make_node("range");
+	 						add_child(parent, $1);
+							add_child(parent, $2);
+							$$ = add_child(parent,$3);}
+  	 | value range_op value STEP value {parse_node *parent = make_node("range");
+	 									add_child(parent, $1);
+										add_child(parent, $2);
+										add_child(parent, $3);
+										add_string(parent, "STEP");
+										$$ = add_child(parent, $5);}
+	   ;
 
-enum_value: enum_type tuple { parse_node* parent = make_node("enum_value");
-                              add_child(parent, $1);
-							  $$ = add_child(parent, $2); }
+enum_value: enum_type close_tuple { parse_node* parent = make_node("enum_value");
+                              		add_child(parent, $1);
+							  									$$ = add_child(parent, $2); }
           ;
 
-tuple: value COMMA tuple { parse_node *parent = make_node("tuple");
-						   add_child(parent, $1);
-						   add_string(parent, "COMMA");
-                           $$ = add_child(parent, $3); }
-     | OPEN CLOSE { parse_node *parent = make_node("tuple");
-                    add_string(parent, "OPEN");
-                    $$ = add_string(parent, "CLOSE"); }
-     | OPEN tuple CLOSE { parse_node *parent = make_node("tuple");
+close_tuple: OPEN CLOSE { parse_node *parent = make_node("close_tuple");
+                    		add_string(parent, "OPEN");
+                    		$$ = add_string(parent, "CLOSE"); }
+             |OPEN tuple CLOSE { parse_node *parent = make_node("close_tuple");
                           add_string(parent, "OPEN");
                           add_child(parent, $2);
-                          $$ = add_string(parent, "CLOSE");}
+            ;              $$ = add_string(parent, "CLOSE");}
+
+tuple: value COMMA tuple { parse_node *parent = make_node("tuple");
+						   				 		add_child(parent, $1);
+						   			 			add_string(parent, "COMMA");
+                           $$ = add_child(parent, $3); }
      | value { $$ = $1; }
      ;
 
@@ -579,16 +596,17 @@ value: mult_ex add_op mult_ex { parse_node* parent = make_node("value");
                                  $$ = add_child(parent, $3); }
       | mult_ex { $$ = $1; }
       | enum_value { $$ = $1; }
-	  | NUL {$$ = make_node("NUL"); }
-	  | ANY OPEN CLOSE { parse_node *parent = make_node("value");
-						 add_string(parent, "ANY");
-						 add_string(parent, "OPEN");
-						 $$ = add_string(parent, "CLOSE"); }
-	  ;
+	    | NUL {$$ = make_node("NUL"); }
+	    | ANY OPEN CLOSE { parse_node *parent = make_node("value");
+						 						add_string(parent, "ANY");
+						 						add_string(parent, "OPEN");
+						 						$$ = add_string(parent, "CLOSE"); }
+	    ;
 
 mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
                                   add_child(parent, $1);
                                   add_child(parent, $2);
+<<<<<<< HEAD
                                   $$ = add_child(parent, $3); }
         | factor INCR { parse_node* parent = make_node("mult_ex");
                              add_child(parent, $1);
@@ -608,41 +626,40 @@ factor: NUMBER { $$ = make_number($1); }
 			| function_ex { parse_node *parent = make_node("factor");
 											$$ = add_child(parent, $1); }
       | pre_uni_op factor { parse_node* parent = make_node("factor");
+=======
+                                  $$ = add_child(parent, $3);}
+		    | STRING { parse_node *new_node = make_node("STRING");
+									strcpy(new_node->data, $1);
+				   				$$ = new_node;  }
+        | factor { $$ = $1; }
+        ;
+
+factor: pre_uni_op number { parse_node* parent = make_node("factor");
+>>>>>>> 14d913560516493ea470e73921913309289f48bc
                             add_child(parent, $1);
                             $$ = add_child(parent, $2);}
+			| number post_uni_op { parse_node* parent = make_node("factor");
+			                       add_child(parent, $1);
+			                       $$ = add_child(parent, $2); }
       | OPEN value CLOSE { parse_node* parent = make_node("factor");
                            add_string(parent, "OPEN");
                            add_child(parent, $2);
                            $$ = add_string(parent, "CLOSE"); }
       ;
 
-object_ex: members function_ex { parse_node *parent = make_node("object_ex");
-							 add_child(parent, $1);
- 							  $$ =  add_child(parent, $2); }
-		 | member function_ex { parse_node *parent = make_node("object_ex");
-								add_child(parent, $1);
-								$$ = add_child(parent, $2); }
-		 | members ID { parse_node *parent = make_node("object_ex");
-	 					add_child(parent, $1);
-						$$ = add_string_ID(parent, $2, "ID"); }
-		 | member ID { parse_node *parent = make_node("object_ex");
-					   add_child(parent, $1);
-					   $$ = add_string_ID(parent, $2, "ID");}
-		 | ID { parse_node *parent = make_node("object_ex");
-				$$ = add_string_ID(parent, $1, "ID"); }
-		 ;
+number: NUMBER { $$ = make_node("NUMBER"); }
+			| object_ex { parse_node *parent = make_node("number");
+					    						$$ = add_child(parent, $1); }
+			;
 
-members : member members { parse_node *parent = make_node("members");
-						   add_child(parent, $1);
-						   $$ = add_child(parent, $2);}
-		| member { parse_node *parent = make_node("members");
-                     $$ = add_child(parent, $1);}
-
-		;
-
-member: ID INCL { parse_node *parent = make_node("member");
-				  add_string_ID(parent, $1, "ID");
-                  $$ = add_string(parent, "INCL"); }
+object_ex: ID INCL object_ex { parse_node *parent = make_node("object_ex");
+				  		add_string_ID(parent, $1, "ID");
+                  		add_string(parent, "INCL");
+						$$ = add_child(parent, $3);}
+	  | ID { parse_node *parent = make_node("object_ex");
+	  		 $$ = add_string_ID(parent, $1, "ID"); }
+    | function_ex {parse_node *parent = make_node("object_ex");
+                   $$ = add_child(parent, $1); }
 	  ;
 
 /* operations */
@@ -659,9 +676,9 @@ pre_uni_op : INCR { $$ = make_node("INCR"); }
            | MINUS { $$ = make_node("MINUS"); }
            ;
 
-/* post_uni_op : INCR { $$ = make_node("INCR"); }
+post_uni_op : INCR { $$ = make_node("INCR"); }
             | DECR { $$ = make_node("DECR"); }
-            ; */
+            ;
 
 ass_op : PLUS_ASSIGNMENT { $$ = make_node("PLUS_ASSIGNMENT"); }
        | MINUS_ASSIGNMENT { $$ = make_node("MINUS_ASSIGNMENT"); }
@@ -826,7 +843,7 @@ void print_tree(parse_node *parent, int layers){
 	}
 	parse_node *next_node = parent->child->next;
 
-	while(next_node != NULL){
+	while(next_node!= NULL){
 		print_tree(next_node, layers+1);
 		next_node = next_node->next;
 	}
