@@ -10,9 +10,10 @@ extern int yyerror(const char *s);
 typedef struct parse_tree{
 		char str[200];
 		char data[2000];
+		int num;
 		struct parse_tree *child;
-	    struct parse_tree *next;
-	    struct parse_tree *prev;
+	  struct parse_tree *next;
+	  struct parse_tree *prev;
 		struct parse_tree *parent;
 }parse_node;
 
@@ -23,6 +24,7 @@ parse_node* add_string_ID(parse_node* parent, char* child, char *ID);
 parse_node* add_child(parse_node* parent, parse_node* child);
 void last_add(parse_node *temp, parse_node *new_node);
 void print_tree(parse_node *parent, int layers);
+parse_node* add_number(parse_node* parent, int num)
 
 %}
 
@@ -594,13 +596,13 @@ mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
 			 | factor DECR { parse_node* parent = make_node("mult_ex");
                             add_child(parent, $1);
 							 $$ = add_string(parent, "DECR"); }
-		| STRING { parse_node *new_node = make_node("STRING");
-					strcpy(new_node->data, $1);	
+				| STRING { parse_node *new_node = make_node("STRING");
+					strcpy(new_node->data, $1);
 				   $$ = new_node;  }
         | factor { $$ = $1; }
         ;
 
-factor: NUMBER { $$ = make_node("NUMBER"); }
+factor: NUMBER { $$ = make_number($1); }
  	  	| object_ex { parse_node *parent = make_node("factor");
 		    						$$ = add_child(parent, $1); }
 			| function_ex { parse_node *parent = make_node("factor");
@@ -743,8 +745,10 @@ int yyerror(const char *s)
 
 parse_node* make_dummy(){
 	  parse_node *new_node = (parse_node *) malloc(sizeof(parse_node));
-	strcpy(new_node->str, "DUMMY");
-	new_node->parent = NULL;
+		strcpy(new_node->str, "DUMMY");
+		num = 0;
+		data = {0, };
+		new_node->parent = NULL;
     new_node->next = NULL;
     new_node->prev = NULL;
     new_node->child = NULL;
@@ -766,10 +770,16 @@ parse_node* add_string(parse_node* parent, char* child){
     return add_child(parent, child_node);
 }
 
+parse_node* add_number(parse_node* parent, int num){
+    parse_node *child_node = make_node("NUMBER");
+		child_node->num = num;
+    return add_child(parent, child_node);
+}
+
 parse_node* add_string_ID(parse_node* parent, char* child, char *ID){
     parse_node *child_node = make_node(ID);
 	strcpy(child_node->data, child);
-	
+
 	for (int i=0; i<1000; i++){
 		if ((47<child_node->data[i]&&child_node->data[i]<58)||(64<child_node->data[i]&&child_node->data[i]<91)||(96<child_node->data[i]&&child_node->data[i]<123)||child_node->data[i]=='\"'){
 			continue;
@@ -807,6 +817,9 @@ void print_tree(parse_node *parent, int layers){
 	}
 	else if (parent->str[0] == 'S' && parent->str[4]=='N'){
 		printf("-%s <%s>\n", parent->str, parent->data);
+	}
+	else if (strcmp(parent->str, "NUMBER") == 0){
+			printf("-%s <%lf>\n",parent->str, parent->num);
 	}
 	else{
 			printf("-%s\n",parent->str);
