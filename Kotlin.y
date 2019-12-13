@@ -386,7 +386,7 @@ when_block : CURLY_OPEN when_sub_block CURLY_CLOSE { parse_node *parent = make_n
 
 when_sub_block:  when_states when_sub_block { parse_node *parent = make_node("when_sub_block");
                        		add_child(parent, $1);
-                       		$$ = add_child(parent, $3); }
+                       		$$ = add_child(parent, $2); }
 							| when_states {parse_node *parent =make_node("when_sub_block");
 															$$ = add_child(parent, $1); }
 
@@ -606,7 +606,6 @@ value: mult_ex add_op mult_ex { parse_node* parent = make_node("value");
 mult_ex : factor mult_op factor { parse_node* parent = make_node("mult_ex");
                                   add_child(parent, $1);
                                   add_child(parent, $2);
-<<<<<<< HEAD
                                   $$ = add_child(parent, $3); }
         | factor INCR { parse_node* parent = make_node("mult_ex");
                              add_child(parent, $1);
@@ -626,8 +625,7 @@ factor: NUMBER { $$ = make_number($1); }
 			| function_ex { parse_node *parent = make_node("factor");
 											$$ = add_child(parent, $1); }
       | pre_uni_op factor { parse_node* parent = make_node("factor");
-=======
-                                  $$ = add_child(parent, $3);}
+                                  $$ = add_child(parent, $2);}
 		    | STRING { parse_node *new_node = make_node("STRING");
 									strcpy(new_node->data, $1);
 				   				$$ = new_node;  }
@@ -635,7 +633,6 @@ factor: NUMBER { $$ = make_number($1); }
         ;
 
 factor: pre_uni_op number { parse_node* parent = make_node("factor");
->>>>>>> 14d913560516493ea470e73921913309289f48bc
                             add_child(parent, $1);
                             $$ = add_child(parent, $2);}
 			| number post_uni_op { parse_node* parent = make_node("factor");
